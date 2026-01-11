@@ -1,0 +1,13 @@
+com\example\demo\utilisateur\entity\Articles.class
+com\example\demo\utilisateur\entity\Users.class
+com\example\demo\utilisateur\service\ArticlesService.class
+com\example\demo\utilisateur\service\PersonService.class
+com\example\demo\BootApplication.class
+com\example\demo\utilisateur\service\CommandeService.class
+com\example\demo\utilisateur\repository\ArticlesRepository.class
+com\example\demo\utilisateur\repository\CommandeRepository.class
+com\example\demo\utilisateur\repository\PersonRepository.class
+com\example\demo\rest\PersonController.class
+com\example\demo\utilisateur\entity\Commande.class
+com\example\demo\rest\ArticlesController.class
+com\example\demo\rest\CommandeController.class
