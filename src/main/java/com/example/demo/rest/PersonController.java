@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -33,6 +34,32 @@ public class PersonController {
         Users savedUser = personService.savePerson(person);
         return ResponseEntity.ok(savedUser);
     }
+   
+ // PUT
+   @PutMapping("/update/{id}")
+public ResponseEntity<Users> updateUser(
+        @PathVariable Integer id,
+        @RequestBody Users userDetails) {
+
+    Optional<Users> optionalUser = personService.findPersonById(id);
+
+    if (!optionalUser.isPresent()) {
+        return ResponseEntity.notFound().build(); // si l'utilisateur n'existe pas
+    }
+
+    Users user = optionalUser.get();
+    // Mise à jour des champs
+    user.setFirstname(userDetails.getFirstname());
+    user.setLastname(userDetails.getLastname());
+    user.setEmail(userDetails.getEmail());
+    user.setCin(userDetails.getCin());
+    user.setPassWord(userDetails.getPassWord());
+    user.setRole(userDetails.getRole());
+    user.setBirthDate(userDetails.getBirthDate());
+
+    Users updatedUser = personService.savePerson(user);
+    return ResponseEntity.ok(updatedUser);
+}
 
 
     /// GET - tous les users
@@ -87,5 +114,8 @@ public class PersonController {
     @GetMapping("/count")
     public ResponseEntity<Long> countUsers() {
         return ResponseEntity.ok(personService.countUsers());
+ 
     }
+    
+
 }
