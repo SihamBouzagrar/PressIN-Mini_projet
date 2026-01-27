@@ -1,24 +1,25 @@
-Structure actuel du Front End de mon projet :
+📁 Structure du projet
+Front-End
+
+Le front-end est situé à la racine dans /PressIN-app et contient les pages HTML suivantes :
+
 /PressIN-app
+│── index.html         # Page d'accueil
+│── login.html         # Page de connexion
+│── register.html      # Page d'inscription
+│── profile.html       # Page pour afficher/modifier le profil utilisateur
+│── commande.html      # Page de gestion des commandes
+│── dashboard.html     # Tableau de bord (utilisateur connecté / admin)
+│── article.html       # Gestion des articles / vêtements
+│── service.html       # Gestion des services
+Back-End
 
-│── index.html        (Accueil)
-│── login.html      ( page pour se connecter)
-│── register.html   (page pour s’inscrire)
-│── profile.html   (page pour afficher/modifier le profil utilisateur)
-│── commande.html     (commande)
-│── dashboard.html    (tableau de bord (souvent pour l’admin ou l’utilisateur connecté).)
-│── article.html      (Articles / vêtements)
-│── service.html      (Services)
+Le back-end est développé en Java (Spring Boot) et se trouve dans :
 
-Cote Back End :
 src/main/java/com/example/demo/rest
-    ├── AuthController.java
-    ├── ArticlesController.java
-    ├── CommandeController.java
-    ├── PersonController.java
-    
-ArticlesController = gérer uniquement les articles
-
-CommandeController = gérer uniquement les commandes
+├── AuthController.java      # Gestion de l'authentification (login, logout, session)
+├── ArticlesController.java  # Gestion des articles / vêtements
+├── CommandeController.java  # Gestion des commandes
+├── PersonController.java    # Gestion des informations utilisateur (profil)
 
 AuthController = login/logout, session
