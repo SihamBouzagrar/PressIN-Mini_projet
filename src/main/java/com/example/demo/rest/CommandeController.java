@@ -15,11 +15,6 @@ import java.util.Optional;
 @RequestMapping("/rest/commandes")
 @CrossOrigin("*")
 public class CommandeController {
-    /*
-     * =========================
-     * PUT - Modifier une commande
-     * =========================
-     */
 
     @Autowired
     private CommandeService commandeService;
@@ -31,7 +26,6 @@ public class CommandeController {
      */
     @PostMapping(value = "/create", consumes = "application/json")
     public ResponseEntity<Commande> createCommande(@RequestBody Commande commande) {
-
         Commande savedCommande = commandeService.saveCommande(commande);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCommande);
     }
@@ -69,10 +63,9 @@ public class CommandeController {
 
         if (commandeDetails.getCodeOcr() != null)
             commande.setCodeOcr(commandeDetails.getCodeOcr());
-
-        // ⚠️ À activer SEULEMENT si relation bien configurée
-        if (commandeDetails.getClient() != null)
-            commande.setClient(commandeDetails.getClient());
+        // ⚡ Mettre à jour l'utilisateur de la commande si fourni
+        if (commandeDetails.getUser() != null)
+            commande.setUser(commandeDetails.getUser());
 
         Commande updatedCommande = commandeService.saveCommande(commande);
         return ResponseEntity.ok(updatedCommande);
@@ -83,9 +76,10 @@ public class CommandeController {
      * GET - Toutes les commandes
      * =========================
      */
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Commande>> getAllCommandes() {
-        return ResponseEntity.ok(commandeService.findAll());
+        List<Commande> commandes = commandeService.findAllCommandes();
+        return ResponseEntity.ok(commandes);
     }
 
     /*
@@ -98,6 +92,12 @@ public class CommandeController {
         return commandeService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Commande>> getCommandesByUser(@PathVariable Integer userId) {
+        List<Commande> commandes = commandeService.findByUserId(userId);
+        return ResponseEntity.ok(commandes);
     }
 
     /*

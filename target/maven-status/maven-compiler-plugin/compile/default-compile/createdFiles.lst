@@ -7,6 +7,7 @@ com\example\demo\utilisateur\service\CommandeService.class
 com\example\demo\utilisateur\repository\ArticlesRepository.class
 com\example\demo\utilisateur\repository\CommandeRepository.class
 com\example\demo\utilisateur\repository\PersonRepository.class
+com\example\demo\config\WebConfig.class
 com\example\demo\rest\PersonController.class
 com\example\demo\utilisateur\entity\Commande.class
 com\example\demo\rest\ArticlesController.class

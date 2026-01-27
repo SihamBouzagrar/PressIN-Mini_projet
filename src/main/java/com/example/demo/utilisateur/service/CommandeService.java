@@ -1,6 +1,5 @@
 package com.example.demo.utilisateur.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +8,7 @@ import com.example.demo.utilisateur.repository.CommandeRepository;
 
 import java.util.List;
 import java.util.Optional;
+
 @Service
 public class CommandeService {
 
@@ -25,7 +25,7 @@ public class CommandeService {
     /* =========================
        READ - ALL
        ========================= */
-    public List<Commande> findAll() {
+    public List<Commande> findAllCommandes() {
         return commandeRepository.findAll();
     }
 
@@ -35,6 +35,9 @@ public class CommandeService {
     public Optional<Commande> findById(Integer id) {
         return commandeRepository.findById(id);
     }
+    public List<Commande> findByUserId(Integer userId) {
+    return commandeRepository.findByUserId(userId);
+}
 
     /* =========================
        DELETE
@@ -46,3 +49,4 @@ public class CommandeService {
         commandeRepository.deleteById(id);
     }
 }
+
