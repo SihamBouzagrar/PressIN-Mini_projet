@@ -2,14 +2,35 @@
 
 ## 📋 Description du Projet
 
+<<<<<<< HEAD
 PressIN est une application web complète de gestion de pressing permettant aux clients de passer des commandes en ligne et aux administrateurs de gérer les services de nettoyage, repassage et entretien de vêtements.
+=======
+/PressIN-app
+│── index.html         # Page d'accueil
+│── login.html         # Page de connexion
+│── register.html      # Page d'inscription
+│── profile.html       # Page pour afficher/modifier le profil utilisateur
+│── commande.html      # Page de gestion des commandes
+│── dashboard.html     # Tableau de bord (utilisateur connecté / admin)
+
+│── service.html       # Gestion des services
+Back-End
+>>>>>>> 315ab0a (ajout des nv fonctionnalites)
 
 ## 🏗️ Architecture du Projet
 
+<<<<<<< HEAD
 Le projet suit une architecture Client-Serveur avec :
 - **Front-End** : HTML, CSS, JavaScript
 - **Back-End** : Java (Spring Boot)
 - **Base de Données** : PostgreSQL
+=======
+src/main/java/com/example/demo/rest
+├── AuthController.java      # Gestion de l'authentification (login, logout, session)
+
+├── CommandeController.java  # Gestion des commandes
+├── PersonController.java    # Gestion des informations utilisateur (profil)
+>>>>>>> 315ab0a (ajout des nv fonctionnalites)
 
 ---
 

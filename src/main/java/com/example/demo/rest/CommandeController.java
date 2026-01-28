@@ -6,8 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.utilisateur.entity.Commande;
+import com.example.demo.utilisateur.entity.Users;
+import com.example.demo.utilisateur.repository.CommandeRepository;
 import com.example.demo.utilisateur.service.CommandeService;
+import com.example.demo.utilisateur.service.PersonService;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,16 +22,30 @@ public class CommandeController {
 
     @Autowired
     private CommandeService commandeService;
+    @Autowired
+    private CommandeRepository commandeRepository; // instance injectée
 
     /*
      * =========================
      * POST - Créer une commande
      * =========================
      */
-    @PostMapping(value = "/create", consumes = "application/json")
-    public ResponseEntity<Commande> createCommande(@RequestBody Commande commande) {
-        Commande savedCommande = commandeService.saveCommande(commande);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedCommande);
+    @Autowired
+    private PersonService userService;
+
+    @PostMapping("/create")
+    public Commande createCommande(@RequestBody CommandeDTO dto) {
+
+        Commande cmd = new Commande();
+        cmd.setUser(userService.getCurrentUser()); // assignation automatique du client
+        cmd.setDateReception(LocalDate.now());
+        cmd.setDateRemisePrevue(LocalDate.now().plusDays(3));
+        cmd.setStatut("En attente");
+        cmd.setPrixTotal(dto.getPrixTotal());
+        cmd.setOrderDetails(dto.getOrderDetails());
+
+        // APPEL CORRECT
+        return commandeRepository.save(cmd);
     }
 
     /*
@@ -61,8 +79,6 @@ public class CommandeController {
         if (commandeDetails.getPrixTotal() != null)
             commande.setPrixTotal(commandeDetails.getPrixTotal());
 
-        if (commandeDetails.getCodeOcr() != null)
-            commande.setCodeOcr(commandeDetails.getCodeOcr());
         // ⚡ Mettre à jour l'utilisateur de la commande si fourni
         if (commandeDetails.getUser() != null)
             commande.setUser(commandeDetails.getUser());

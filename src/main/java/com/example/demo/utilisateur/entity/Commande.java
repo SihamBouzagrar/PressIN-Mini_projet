@@ -1,10 +1,10 @@
 package com.example.demo.utilisateur.entity;
 
 import java.time.LocalDate;
+
 import javax.persistence.*;
 
 import org.springframework.lang.NonNull;
-
 
 @Entity
 @Table(name = "commandes")
@@ -20,48 +20,82 @@ public class Commande {
     @ManyToOne
     @JoinColumn(name = "id_users", nullable = false)
     private Users user;
-
+    @Column(columnDefinition = "TEXT")
+    private String orderDetails; // JSON de tous les articles
     @NonNull
     @Column(name = "statut", nullable = false)
     private String statut;
-
-  
     private Double prixTotal;
 
-    private String codeOcr;
-
     // === Constructeurs ===
-    public Commande() {}
+    public Commande() {
+    }
 
     public Commande(LocalDate dateReception, LocalDate dateRemisePrevue, Users user, String statut,
-                     Double prixTotal, String codeOcr) {
+            Double prixTotal) {
         this.dateReception = dateReception;
         this.dateRemisePrevue = dateRemisePrevue;
         this.user = user;
         this.statut = statut;
         this.prixTotal = prixTotal;
-        this.codeOcr = codeOcr;
+
     }
 
     // === Getters & Setters ===
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public Integer getId() {
+        return id;
+    }
 
-    public LocalDate getDateReception() { return dateReception; }
-    public void setDateReception(LocalDate dateReception) { this.dateReception = dateReception; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public LocalDate getDateRemisePrevue() { return dateRemisePrevue; }
-    public void setDateRemisePrevue(LocalDate dateRemisePrevue) { this.dateRemisePrevue = dateRemisePrevue; }
+    public LocalDate getDateReception() {
+        return dateReception;
+    }
 
-    public Users getUser() { return user; }
-    public void setUser(Users user) { this.user = user; }
+    public void setDateReception(LocalDate dateReception) {
+        this.dateReception = dateReception;
+    }
 
-    public String getStatut() { return statut; }
-    public void setStatut(String statut) { this.statut = statut; }
+    public LocalDate getDateRemisePrevue() {
+        return dateRemisePrevue;
+    }
 
-    public Double getPrixTotal() { return prixTotal; }
-    public void setPrixTotal(Double prixTotal) { this.prixTotal = prixTotal; }
+    public void setDateRemisePrevue(LocalDate dateRemisePrevue) {
+        this.dateRemisePrevue = dateRemisePrevue;
+    }
 
-    public String getCodeOcr() { return codeOcr; }
-    public void setCodeOcr(String codeOcr) { this.codeOcr = codeOcr; }
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public String getStatut() {
+        return statut;
+    }
+
+    public void setStatut(String statut) {
+        this.statut = statut;
+    }
+
+    public Double getPrixTotal() {
+        return prixTotal;
+    }
+
+    public void setPrixTotal(Double prixTotal) {
+        this.prixTotal = prixTotal;
+    }
+
+    public String getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(String orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+
 }

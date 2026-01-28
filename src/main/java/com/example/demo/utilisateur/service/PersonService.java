@@ -102,5 +102,11 @@ public class PersonService {
     public List<Users> findAllUsers() {
         return personRepository.findAll();
     }
-
+// Pour l'instant, on simule le user connecté
+public Users getCurrentUser() {
+Users user = new Users();
+user.setId(1); // ID d'un utilisateur existant dans la table users
+user.setFirstname("client1");
+return user;
+}
 }
