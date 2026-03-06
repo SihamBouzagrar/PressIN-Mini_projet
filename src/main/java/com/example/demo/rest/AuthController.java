@@ -9,17 +9,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.demo.dto.LoginRequest;
 import com.example.demo.utilisateur.entity.Users;
-import com.example.demo.utilisateur.repository.PersonRepository;
+import com.example.demo.utilisateur.repository.UserRepository;
 
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin("*")
 public class AuthController {
 
-    private final PersonRepository personRepository;
+    private final UserRepository personRepository;
 
-    public AuthController(PersonRepository personRepository) {
+    public AuthController(UserRepository personRepository) {
         this.personRepository = personRepository;
     }
 

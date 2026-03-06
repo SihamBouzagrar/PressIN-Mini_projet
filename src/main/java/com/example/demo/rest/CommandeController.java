@@ -1,19 +1,29 @@
 package com.example.demo.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import com.example.demo.utilisateur.entity.Commande;
-import com.example.demo.utilisateur.entity.Users;
-import com.example.demo.utilisateur.repository.CommandeRepository;
-import com.example.demo.utilisateur.service.CommandeService;
-import com.example.demo.utilisateur.service.PersonService;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.dto.CommandeDTO;
+import com.example.demo.utilisateur.entity.Client;
+import com.example.demo.utilisateur.entity.Commande;
+
+import com.example.demo.utilisateur.entity.Users;
+import com.example.demo.utilisateur.repository.CommandeRepository;
+import com.example.demo.utilisateur.service.CommandeService;
+import com.example.demo.utilisateur.service.UserService;
 
 @RestController
 @RequestMapping("/rest/commandes")
@@ -21,98 +31,82 @@ import java.util.Optional;
 public class CommandeController {
 
     @Autowired
-    private CommandeService commandeService;
-    @Autowired
-    private CommandeRepository commandeRepository; // instance injectée
+    private  CommandeService commandeService;
+     @Autowired
+    private  UserService userService;
+    
+    @PostMapping("/create/{clientId}")
+    public ResponseEntity<Commande> createCommande(
+            @PathVariable Long clientId,
+            @RequestBody CommandeDTO dto) {
+                 // ✅ Récupérer le Client (pas Users)
+        Users user = userService.findClientById(clientId )
+                .orElseThrow(() -> new RuntimeException("Client introuvable id=" + clientId));
 
-    /*
-     * =========================
-     * POST - Créer une commande
-     * =========================
-     */
-    @Autowired
-    private PersonService userService;
-
-    @PostMapping("/create")
-    public Commande createCommande(@RequestBody CommandeDTO dto) {
-
+        if (!(user instanceof Client)) {
+            return ResponseEntity.badRequest().build();
+        }
+       
         Commande cmd = new Commande();
-        cmd.setUser(userService.getCurrentUser()); // assignation automatique du client
-        cmd.setDateReception(LocalDate.now());
-        cmd.setDateRemisePrevue(LocalDate.now().plusDays(3));
-        cmd.setStatut("En attente");
-        cmd.setPrixTotal(dto.getPrixTotal());
-        cmd.setOrderDetails(dto.getOrderDetails());
+        cmd.setClient((Client) user);
+        cmd.setDateCollecteSouhaitee(
+            dto.getDateCollecteSouhaitee() != null
+            ? dto.getDateCollecteSouhaitee() : LocalDate.now()
+        );
+        cmd.setDateLivraisonSouhaitee(
+            dto.getDateLivraisonSouhaitee() != null
+            ? dto.getDateLivraisonSouhaitee() : LocalDate.now().plusDays(3)
+        );
+       if (dto.getTypeLivraison() != null)
+    cmd.setTypeLivraison(Commande.TypeLivraison.valueOf(dto.getTypeLivraison()));
+        cmd.setMontantRemise(dto.getMontantRemise());
 
-        // APPEL CORRECT
-        return commandeRepository.save(cmd);
-    }
+        return ResponseEntity.status(201).body(commandeService.saveCommande(cmd));
+    }   
+
 
     /*
      * =========================
      * PUT - Modifier une commande
      * =========================
      */
-    @PutMapping("/update/{id}")
+   @PutMapping("/update/{id}")
     public ResponseEntity<Commande> updateCommande(
-            @PathVariable Integer id,
-            @RequestBody Commande commandeDetails) {
+            @PathVariable Long id,
+            @RequestBody CommandeDTO dto) {   
 
         Optional<Commande> optionalCommande = commandeService.findById(id);
-
         if (optionalCommande.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
         Commande commande = optionalCommande.get();
+ if (dto.getDateCollecteSouhaitee() != null)
+            commande.setDateCollecteSouhaitee(dto.getDateCollecteSouhaitee());
+        if (dto.getDateLivraisonSouhaitee() != null)
+            commande.setDateLivraisonSouhaitee(dto.getDateLivraisonSouhaitee());
+        if (dto.getTypeLivraison() != null)
+            commande.setTypeLivraison(Commande.TypeLivraison.valueOf(dto.getTypeLivraison()));
+        if (dto.getMontantRemise() != null) {
+            commande.setMontantRemise(dto.getMontantRemise());
+            commande.calculerMontantTotal();  // ✅ recalcul automatique
+        }
 
-        // ✅ Mise à jour sécurisée (uniquement si non null)
-        if (commandeDetails.getDateReception() != null)
-            commande.setDateReception(commandeDetails.getDateReception());
-
-        if (commandeDetails.getDateRemisePrevue() != null)
-            commande.setDateRemisePrevue(commandeDetails.getDateRemisePrevue());
-
-        if (commandeDetails.getStatut() != null)
-            commande.setStatut(commandeDetails.getStatut());
-
-        if (commandeDetails.getPrixTotal() != null)
-            commande.setPrixTotal(commandeDetails.getPrixTotal());
-
-        // ⚡ Mettre à jour l'utilisateur de la commande si fourni
-        if (commandeDetails.getUser() != null)
-            commande.setUser(commandeDetails.getUser());
-
-        Commande updatedCommande = commandeService.saveCommande(commande);
-        return ResponseEntity.ok(updatedCommande);
+        return ResponseEntity.ok(commandeService.saveCommande(commande));
     }
 
-    /*
-     * =========================
-     * GET - Toutes les commandes
-     * =========================
-     */
-    @GetMapping("/all")
-    public ResponseEntity<List<Commande>> getAllCommandes() {
-        List<Commande> commandes = commandeService.findAllCommandes();
-        return ResponseEntity.ok(commandes);
-    }
-
-    /*
-     * =========================
-     * GET - Commande par ID
-     * =========================
-     */
+   
     @GetMapping("/{id}")
-    public ResponseEntity<Commande> getCommandeById(@PathVariable Integer id) {
+    public ResponseEntity<Commande> getCommandeById(@PathVariable Long id) {
         return commandeService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+   
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Commande>> getCommandesByUser(@PathVariable Integer userId) {
-        List<Commande> commandes = commandeService.findByUserId(userId);
+    public ResponseEntity<List<Commande>> getCommandesByUser(@PathVariable Long userId) {
+        List<Commande> commandes = commandeService.findByClientId(userId);
         return ResponseEntity.ok(commandes);
     }
 
@@ -121,9 +115,15 @@ public class CommandeController {
      * DELETE - Supprimer commande
      * =========================
      */
+    
+    @GetMapping("/client/{clientId}")
+    public ResponseEntity<List<Commande>> getByClient(@PathVariable Long clientId) {
+        return ResponseEntity.ok(commandeService.findByClientId(clientId));
+    }
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteCommande(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteCommande(@PathVariable Long id) {
         commandeService.deleteCommande(id);
         return ResponseEntity.noContent().build();
     }
+
 }

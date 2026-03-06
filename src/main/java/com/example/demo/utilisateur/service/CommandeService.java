@@ -1,11 +1,9 @@
 package com.example.demo.utilisateur.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.utilisateur.entity.Commande;
-
 import com.example.demo.utilisateur.repository.CommandeRepository;
 
 import java.util.List;
@@ -14,38 +12,19 @@ import java.util.Optional;
 @Service
 public class CommandeService {
 
-    @Autowired
+    
     private CommandeRepository commandeRepository;
 
-    /*
-     * =========================
-     * READ - ALL
-     * =========================
-     */
     public List<Commande> findAllCommandes() {
         return commandeRepository.findAll();
     }
 
-    /*
-     * =========================
-     * READ - BY ID
-     * =========================
-     */
-    public Optional<Commande> findById(Integer id) {
+    public Optional<Commande> findById(Long id) {
         return commandeRepository.findById(id);
     }
 
-    public List<Commande> findByUserId(Integer userId) {
-        return commandeRepository.findByUserId(userId);
-    }
-
-    /*
-     * =========================
-     * DELETE
-     * =========================
-     */
     @Transactional
-    public void deleteCommande(Integer id) {
+    public void deleteCommande(Long id) {
         if (!commandeRepository.existsById(id)) {
             throw new RuntimeException("Commande introuvable avec id = " + id);
         }
@@ -57,5 +36,14 @@ public Commande saveCommande(Commande commande) {
     return commandeRepository.save(commande);
 }
 
+
+public List<Commande> findByClientId(Long clientId) {
+    return commandeRepository.findByClientId(clientId);
+}
+
+public Object save(Commande cmd) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'save'");
+}
   
 }

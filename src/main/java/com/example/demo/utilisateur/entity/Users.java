@@ -1,20 +1,21 @@
 package com.example.demo.utilisateur.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SuperBuilder
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type_utilisateur", discriminatorType = DiscriminatorType.STRING)
+
 @Table(name = "users")
 public class Users {
 
@@ -31,26 +32,46 @@ public class Users {
 
     @Column(name = "email", unique = true)
     private String email;
+    @Column(name = "pass_word", nullable = false)
+    private String passWord;
+    @Column(unique = true)
+    private String telephone;
 
     @Column(name = "birth_date")
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 
     @Column(name = "cin", unique = true)
     private String cin;
 
-    @Column(name = "pass_word", nullable = false)
-    private String passWord;
-
-    @Column(name = "role")
-    private String role;
+     @Embedded
+    private Adresse adresse;
+        // Colonne discriminante lue en lecture seule
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type_utilisateur", insertable = false, updatable = false)
+    private TypeUtilisateur typeUtilisateur;
 
     @Column(name = "date_creation", updatable = false)
     private LocalDateTime dateCreation;
 
-    // ⚡ Méthode exécutée avant insertion pour initialiser la date de création
-    @PrePersist
+    @Column(name = "date_modification")
+    private LocalDateTime dateModification;
+
+  
+
+     @PrePersist
     protected void onCreate() {
         this.dateCreation = LocalDateTime.now();
+        this.dateModification = LocalDateTime.now();
+      
     }
-}
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.dateModification = LocalDateTime.now();
+    }
+
+    public enum TypeUtilisateur {
+        ADMIN, CLIENT, LIVREUR
+    }
+    }
+
