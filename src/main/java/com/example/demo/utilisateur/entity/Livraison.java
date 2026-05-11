@@ -1,50 +1,64 @@
 package com.example.demo.utilisateur.entity;
 
 import java.time.LocalDateTime;
+import javax.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Embedded;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-
+@Entity
+@Table(name = "livraisons")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Livraison {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @OneToOne(mappedBy = "livraison")
+
+    @OneToOne
+    @JoinColumn(name = "commande_id")
     private Commande commande;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "livreur_id")
-    private Livreur livreur;
-    
+    private Users livreur;
+
     @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "rue",        column = @Column(name = "collecte_rue")),
+        @AttributeOverride(name = "ville",      column = @Column(name = "collecte_ville")),
+        @AttributeOverride(name = "codePostal", column = @Column(name = "collecte_code_postal")),
+        @AttributeOverride(name = "pays",       column = @Column(name = "collecte_pays"))
+    })
     private Adresse adresseCollecte;
-    
+
     @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "rue",        column = @Column(name = "dest_rue")),
+        @AttributeOverride(name = "ville",      column = @Column(name = "dest_ville")),
+        @AttributeOverride(name = "codePostal", column = @Column(name = "dest_code_postal")),
+        @AttributeOverride(name = "pays",       column = @Column(name = "dest_pays"))
+    })
     private Adresse adresseLivraison;
-    
+
+    @CreationTimestamp
     private LocalDateTime dateCollectePrevue;
     private LocalDateTime dateCollecteEffective;
     private LocalDateTime dateLivraisonPrevue;
     private LocalDateTime dateLivraisonEffective;
-    
+
     @Enumerated(EnumType.STRING)
-    private StatutLivraison statut;
-    
-    private Double latitudeActuelle;
-    private Double longitudeActuelle;
-    private LocalDateTime derniereMiseAJourPosition;
-    
+    @Builder.Default
+    private StatutLivraison statut = StatutLivraison.PLANIFIEE; // ← plus besoin de @PrePersist
+
     public enum StatutLivraison {
-        PLANIFIEE, EN_COURS_DE_COLLECTE, COLLECTEE, EN_COURS_DE_LIVRAISON, LIVREE, ANNULEE
+        PLANIFIEE,
+        EN_COURS_DE_COLLECTE,
+        COLLECTEE,
+        EN_COURS_DE_LIVRAISON,
+        LIVREE,
+        ANNULEE
     }
 }

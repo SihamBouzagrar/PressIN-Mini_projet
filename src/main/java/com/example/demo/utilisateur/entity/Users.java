@@ -1,77 +1,50 @@
 package com.example.demo.utilisateur.entity;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
+
+import com.example.demo.utilisateur.entity.Users;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.Builder;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@SuperBuilder
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type_utilisateur", discriminatorType = DiscriminatorType.STRING)
-
+@Builder
 @Table(name = "users")
-public class Users {
+
+public class  Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    private Long id;
 
-    @Column(name = "firstname")
     private String firstname;
-
-    @Column(name = "lastname")
     private String lastname;
-
-    @Column(name = "email", unique = true)
-    private String email;
-    @Column(name = "pass_word", nullable = false)
-    private String passWord;
-    @Column(unique = true)
-    private String telephone;
-
     @Column(name = "birth_date")
-    private LocalDate birthDate;
+@JsonFormat(pattern = "yyyy-MM-dd")
+private LocalDate birthDate;
+    private String email;
 
-    @Column(name = "cin", unique = true)
+    @Column(name = "pass_word")
+    private String passWord;
+
+    private String telephone;
     private String cin;
 
-     @Embedded
+    @Embedded
     private Adresse adresse;
-        // Colonne discriminante lue en lecture seule
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type_utilisateur", insertable = false, updatable = false)
-    private TypeUtilisateur typeUtilisateur;
-
-    @Column(name = "date_creation", updatable = false)
+ private boolean enabled = true;
     private LocalDateTime dateCreation;
-
-    @Column(name = "date_modification")
     private LocalDateTime dateModification;
-
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role; // ROLE_CLIENT, ROLE_ADMIN, ROLE_LIVREUR
   
-
-     @PrePersist
-    protected void onCreate() {
-        this.dateCreation = LocalDateTime.now();
-        this.dateModification = LocalDateTime.now();
-      
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.dateModification = LocalDateTime.now();
-    }
-
-    public enum TypeUtilisateur {
-        ADMIN, CLIENT, LIVREUR
-    }
-    }
-
+}

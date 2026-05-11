@@ -2,25 +2,19 @@ package com.example.demo.dto;
 import lombok.*;
 import java.time.LocalDate;
 
+import com.example.demo.utilisateur.entity.Adresse;
+import com.example.demo.utilisateur.entity.Commande.StatutCommande;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommandeDTO {
 
-    private Double montantRemise;
-    private String typeLivraison;  // "A_DOMICILE" ou "EN_MAGASIN"
+public class CommandeDTO {
     private LocalDate dateCollecteSouhaitee;
     private LocalDate dateLivraisonSouhaitee;
-
-    // Adresse livraison
-    private String livraisonRue;
-    private String livraisonVille;
-    private String livraisonCodePostal;
-    private String livraisonPays = "Maroc";;
- 
-
-    // Anciens champs conservés
-    private Double prixTotal;
-    private String orderDetails;
+    private String    typeLivraison;
+    private Double    montantRemise;
+    private Adresse   adresseLivraison;  // ✅ doit être présent
+    private StatutCommande statut;
 }

@@ -44,8 +44,16 @@ public class Article {
 
     @Enumerated(EnumType.STRING)
     private TypeTraitement typeTraitement; // LAVAGE, REPASSAGE, etc.
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private ServicePressing service;
 
-  //  private String remarque;
+    // Le prix se prérempli depuis le service choisi
+    public void appliquerService(ServicePressing s) {
+        this.typeTraitement = TypeTraitement.valueOf(s.getCategorie().name());
+        this.prixUnitaire = s.getPrixBase();
+    }
+    // private String remarque;
 
     // ✅ Méthode manquante — corrige l'erreur mapToDouble
     public Double getPrixTotal() {

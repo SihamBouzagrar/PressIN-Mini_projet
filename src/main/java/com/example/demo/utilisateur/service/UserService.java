@@ -1,15 +1,10 @@
 package com.example.demo.utilisateur.service;
 
-
+import com.example.demo.utilisateur.entity.Role;
+import com.example.demo.utilisateur.entity.Users;
+import com.example.demo.utilisateur.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import com.example.demo.utilisateur.entity.Admin;
-import com.example.demo.utilisateur.entity.Client;
-import com.example.demo.utilisateur.entity.Livreur;
-import com.example.demo.utilisateur.repository.AdminRepository;
-import com.example.demo.utilisateur.repository.ClientRepository;
-import com.example.demo.utilisateur.repository.LivreurRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,70 +13,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final ClientRepository  clientRepository;
-    private final AdminRepository   adminRepository;
-    private final LivreurRepository livreurRepository;
+    private final UserRepository userRepository;
 
-    // ===== CLIENTS =====
-    public List<Client> findAllClients() {
-        return clientRepository.findAll();
+    public List<Users> findByRole(Role role) {
+        return userRepository.findByRole(role);
     }
 
-    public Optional<Client> findClientById(Long clientId) {
-        return clientRepository.findById(clientId);
+    public Optional<Users> findById(Long id) {
+        return userRepository.findById(id);
     }
 
-    public Optional<Client> findClientByEmail(String email) {
-        return clientRepository.findByEmail(email);
+    public Users save(Users user) {
+        return userRepository.save(user);
     }
 
-    public Client saveClient(Client client) {
-        return clientRepository.save(client);
-    }
-
-    public void deleteClientById(Long id) {
-        clientRepository.deleteById(id);
-    }
-
-    public boolean clientExistsByEmail(String email) {
-        return clientRepository.existsByEmail(email);
-    }
-
-    public long countClients() {
-        return clientRepository.count();
-    }
-
-    // ===== ADMINS =====
-    public List<Admin> findAllAdmins() {
-        return adminRepository.findAll();
-    }
-
-    public Optional<Admin> findAdminById(Long id) {
-        return adminRepository.findById(id);
-    }
-
-    public Admin saveAdmin(Admin admin) {
-        return adminRepository.save(admin);
-    }
-
-    public void deleteAdminById(Long id) {
-        adminRepository.deleteById(id);
-    }
-
-    // ===== LIVREURS =====
-    public List<Livreur> findAllLivreurs() {
-        return livreurRepository.findAll();
-    }
-
-    public Optional<Livreur> findLivreurById(Long id) {
-        return livreurRepository.findById(id);
-    }
-
-    public Livreur saveLivreur(Livreur livreur) {
-        return livreurRepository.save(livreur);
-    }
-
-    public void deleteLivreurById(Long id) {
-        livreurRepository.deleteById(id);
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
     }
 }
