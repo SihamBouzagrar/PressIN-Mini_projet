@@ -1,9 +1,9 @@
 pipeline {
-    agent any
-
-    tools {
-        jdk 'JDK17'
-        maven 'Maven'
+    agent {
+        docker {
+            image 'maven:3.9.6-eclipse-temurin-17'
+            args '-v $HOME/.m2:/root/.m2 -v /var/run/docker.sock:/var/run/docker.sock'
+        }
     }
 
     stages {
@@ -32,19 +32,12 @@ pipeline {
             }
         }
 
-        stage('Kill old app') {
-            steps {
-                sh '''
-                    fuser -k 8083/tcp || true
-                '''
-            }
-        }
-
         stage('Run App') {
             steps {
                 sh '''
                     nohup java -jar target/*.jar --server.port=8083 > app.log 2>&1 &
                     sleep 10
+                    echo "App started on port 8083"
                 '''
             }
         }
