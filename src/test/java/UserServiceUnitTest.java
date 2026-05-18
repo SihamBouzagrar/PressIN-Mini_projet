@@ -1,7 +1,9 @@
-package com.example.demo.utilisateur.service;
+
 
 import com.example.demo.utilisateur.entity.Role;
 import com.example.demo.utilisateur.repository.UserRepository;
+import com.example.demo.utilisateur.service.UserService;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,7 +35,7 @@ class UserServiceTest {
                 () -> userService.findByRole(Role.ROLE_CLIENT));
 
         assertEquals("Database error", exception.getMessage());
-        assertEquals(true, false);
+      
         verify(userRepository, times(1))
                 .findByRole(Role.ROLE_CLIENT);
     }

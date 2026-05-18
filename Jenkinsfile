@@ -8,29 +8,24 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Build') {
             steps {
-                sh 'mvn clean compile'
+                bat 'mvn clean compile'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn test'
+                bat 'mvn test'
             }
         }
 
         stage('Package') {
             steps {
-                sh 'mvn package'
+                bat 'mvn package'
             }
         }
+
         stage('Kill old app') {
             steps {
                 bat '''
@@ -39,7 +34,7 @@ pipeline {
             }
         }
 
-         stage('Run App') {
+        stage('Run App') {
             steps {
                 bat '''
                 start cmd /c "java -jar target\\*.jar --server.port=8083"
@@ -52,7 +47,6 @@ pipeline {
         success {
             echo 'CI/CD Pipeline executed successfully!'
         }
-
         failure {
             echo 'Pipeline failed!'
         }
