@@ -2,11 +2,17 @@ pipeline {
     agent any
 
     tools {
-        jdk 'JDK17'
-        maven 'Maven3'
+        jdk 'JDK17'      // Doit correspondre EXACTEMENT au nom dans Jenkins Tools
+        maven 'Maven3'   // Doit correspondre EXACTEMENT au nom dans Jenkins Tools
     }
 
     stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
 
         stage('Build') {
             steps {
@@ -22,14 +28,18 @@ pipeline {
 
         stage('Package') {
             steps {
-                bat 'mvn package'
+                bat 'mvn package -DskipTests'
             }
         }
 
         stage('Kill old app') {
             steps {
+                // Ne plante pas si aucun process sur ce port
                 bat '''
-                for /f "tokens=5" %%a in ('netstat -ano ^| findstr :8083') do taskkill /F /PID %%a
+                    for /f "tokens=5" %%a in ('netstat -ano ^| findstr :8083 2^>nul') do (
+                        taskkill /F /PID %%a 2>nul
+                    )
+                    exit /b 0
                 '''
             }
         }
@@ -37,7 +47,8 @@ pipeline {
         stage('Run App') {
             steps {
                 bat '''
-                start cmd /c "java -jar target\\*.jar --server.port=8083"
+                    start /B cmd /c "java -jar target\\*.jar --server.port=8083 > app.log 2>&1"
+                    timeout /t 10 /nobreak
                 '''
             }
         }
