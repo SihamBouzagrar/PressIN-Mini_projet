@@ -11,25 +11,29 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat 'mvn clean compile'
+                sh 'mvn clean compile'
             }
         }
 
         stage('Test') {
             steps {
-                bat 'mvn test'
+                sh 'mvn test'
             }
         }
 
         stage('Package') {
             steps {
-                bat 'mvn package -DskipTests'
+                sh 'mvn package -DskipTests'
             }
         }
 
         stage('Run App') {
             steps {
-                bat 'start cmd /c "java -jar target/*.jar --server.port=8083"'
+                sh '''
+                nohup java -jar target/*.jar --server.port=8083 > app.log 2>&1 &
+                sleep 10
+                echo "App started on port 8083"
+                '''
             }
         }
     }
