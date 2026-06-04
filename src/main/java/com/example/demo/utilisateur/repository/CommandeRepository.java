@@ -13,5 +13,5 @@ public interface CommandeRepository extends JpaRepository<Commande, Long> {
     List<Commande> findByLivreurId(Long livreurId);
 
     List<Commande> findByStatut(Commande.StatutCommande statut);
-    
+     List<Commande> findByClientIdOrderByIdDesc(Long clientId);
 }

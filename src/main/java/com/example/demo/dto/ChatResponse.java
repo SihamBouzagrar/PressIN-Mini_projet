@@ -1,0 +1,13 @@
+package com.example.demo.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+
+@Data
+@AllArgsConstructor
+public class ChatResponse {
+
+    private String response;
+    private String type; // GENERAL ou DATABASE
+}

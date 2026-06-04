@@ -39,7 +39,7 @@ private LocalDate birthDate;
     private String cin;
 
     @Embedded
-    private Adresse adresse;
+    private AdresseLivraison adresse;
  private boolean enabled = true;
     private LocalDateTime dateCreation;
     private LocalDateTime dateModification;

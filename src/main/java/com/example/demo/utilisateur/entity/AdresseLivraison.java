@@ -7,12 +7,11 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-// ✅ Supprimer @Builder — cause des conflits avec la valeur par défaut "Maroc"
-public class Adresse {
+
+public class AdresseLivraison {
+
     private String rue;
     private String ville;
     private String codePostal;
-    private String pays;   // ✅ valeur par défaut gérée dans le constructeur
-
-
-    }
+    private String pays;
+}

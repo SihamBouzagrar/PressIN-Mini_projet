@@ -1,6 +1,8 @@
 package com.example.demo.utilisateur.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -16,8 +18,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class Commande {
-    
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,24 +38,22 @@ public class Commande {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Users livreur;
 
-    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    @JsonIgnoreProperties({"commande"})
-    private List<Article> articles = new ArrayList<>();
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "livraison_id")
     @JsonIgnoreProperties({"commande"})
     private Livraison livraison;
-@Enumerated(EnumType.STRING)
-private StatutCommande statut;
+
+    @Enumerated(EnumType.STRING)
+    private StatutCommande statut;
 
     @Enumerated(EnumType.STRING)
     private TypeLivraison typeLivraison;
 
     private LocalDate dateCollecteSouhaitee;
     private LocalDate dateLivraisonSouhaitee;
-
+@OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
+@JsonManagedReference
+private List<Article> articles = new ArrayList<>();
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime dateCreation;
@@ -65,33 +65,26 @@ private StatutCommande statut;
     private Double montantRemise;
     private Double montantFinal;
 
-    @Embedded
-    @AttributeOverrides({
-        @AttributeOverride(name = "rue",        column = @Column(name = "livraison_rue")),
-        @AttributeOverride(name = "ville",      column = @Column(name = "livraison_ville")),
-        @AttributeOverride(name = "codePostal", column = @Column(name = "livraison_code_postal")),
-        @AttributeOverride(name = "pays",       column = @Column(name = "livraison_pays"))
-    })
-    private Adresse adresseLivraison;
+   @Embedded
+private AdresseLivraison adresseLivraison;
 
-    @PrePersist
-    protected void onCreate() {
-        this.genererNumeroCommande();
-        if (this.statut == null)
-            this.statut = StatutCommande.RECUE;
-    }
+@PrePersist
+@PreUpdate
+public void preSave() {
 
-    private void genererNumeroCommande() {
+    if (this.numeroCommande == null) {
         this.numeroCommande = "CMD-" + System.currentTimeMillis();
     }
 
-    public void calculerMontantTotal() {
-        this.montantTotal = articles.stream()
-                .mapToDouble(Article::getPrixTotal)
-                .sum();
-        this.montantFinal = montantTotal - (montantRemise != null ? montantRemise : 0);
+    if (this.statut == null) {
+        this.statut = StatutCommande.RECUE;
     }
 
+    double total = (this.montantTotal != null) ? this.montantTotal : 0.0;
+    double remise = (this.montantRemise != null) ? this.montantRemise : 0.0;
+
+    this.montantFinal = total - remise;
+}
     public void assignerLivreur(Users livreur) {
         this.livreur = livreur;
         this.statut = StatutCommande.EN_LIVRAISON;
@@ -102,17 +95,7 @@ private StatutCommande statut;
     }
 
     public enum StatutCommande {
-        RECUE("Reçue"),
-        EN_LAVAGE("En cours de lavage"),
-        EN_REPASSAGE("Repassage"),
-        EN_LIVRAISON("En livraison"),
-        PRETE("Prête à être retirée"),
-        LIVREE("Livrée"),
-        ANNULEE("Annulée");
-
-        private final String libelle;
-        StatutCommande(String libelle) { this.libelle = libelle; }
-        public String getLibelle() { return libelle; }
+        RECUE, EN_LAVAGE, EN_REPASSAGE, EN_LIVRAISON, PRETE, LIVREE, ANNULEE
     }
 
     public enum TypeLivraison {

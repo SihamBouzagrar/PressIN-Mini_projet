@@ -1,9 +1,9 @@
 package com.example.demo.utilisateur.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.utilisateur.entity.Article;
 import com.example.demo.utilisateur.entity.Commande;
 import com.example.demo.utilisateur.repository.CommandeRepository;
 
@@ -14,13 +14,11 @@ import java.util.Optional;
 
 
 @Service
-
 @RequiredArgsConstructor
 public class CommandeService {
-@Autowired
-    private final CommandeRepository commandeRepository;
 
-    public List<Commande> findAllCommandes() {
+    private final CommandeRepository commandeRepository;   
+     public List<Commande> findAllCommandes() {
         return commandeRepository.findAll();
     }
 
@@ -37,8 +35,15 @@ public class CommandeService {
     }
 
 @Transactional
-public Commande saveCommande(Commande commande) {
-    return commandeRepository.save(commande);
+public Commande saveCommande(Commande cmd) {
+
+    if (cmd.getArticles() != null) {
+        for (Article a : cmd.getArticles()) {
+            a.setCommande(cmd); // 🔥 OBLIGATOIRE
+        }
+    }
+
+    return commandeRepository.save(cmd);
 }
 
 

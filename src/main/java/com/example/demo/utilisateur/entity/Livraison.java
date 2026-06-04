@@ -2,15 +2,16 @@ package com.example.demo.utilisateur.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.*;
-import lombok.*;
+
+import lombok.Builder;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "livraisons")
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class Livraison {
 
     @Id
@@ -32,7 +33,7 @@ public class Livraison {
         @AttributeOverride(name = "codePostal", column = @Column(name = "collecte_code_postal")),
         @AttributeOverride(name = "pays",       column = @Column(name = "collecte_pays"))
     })
-    private Adresse adresseCollecte;
+    private AdresseLivraison adresseCollecte;
 
     @Embedded
     @AttributeOverrides({
@@ -41,7 +42,7 @@ public class Livraison {
         @AttributeOverride(name = "codePostal", column = @Column(name = "dest_code_postal")),
         @AttributeOverride(name = "pays",       column = @Column(name = "dest_pays"))
     })
-    private Adresse adresseLivraison;
+    private AdresseLivraison adresseLivraison;
 
     @CreationTimestamp
     private LocalDateTime dateCollectePrevue;
