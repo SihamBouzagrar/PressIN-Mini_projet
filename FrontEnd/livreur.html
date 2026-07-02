@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livreur - PressIN</title>
+    <link rel="icon" href="data:,">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Segoe UI", system-ui, sans-serif; background: #f4f6fb; display: flex; min-height: 100vh; color: #1f2937; }
+        .sidebar { width: 240px; background: linear-gradient(180deg, #1f2937, #111827); color: white; display: flex; flex-direction: column; flex-shrink: 0; min-height: 100vh; box-shadow: 5px 0 20px rgba(0,0,0,0.15); }
+        .sidebar-logo { padding: 1.5rem 1.25rem; font-size: 16px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .sidebar-logo b { background: linear-gradient(135deg, #10b981, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .nav-section { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35); padding: 1.25rem 1.25rem 0.5rem; }
+        .nav-item { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.65); padding: 0.75rem 1.25rem; font-size: 13px; cursor: pointer; border-left: 3px solid transparent; transition: all 0.2s; text-decoration: none; }
+        .nav-item:hover { background: rgba(255,255,255,0.06); color: white; border-left-color: rgba(255,255,255,0.2); }
+        .nav-item.active { background: rgba(16,185,129,0.15); color: #34d399; border-left-color: #10b981; }
+        .sidebar-bottom { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.08); padding: 1.25rem; }
+        .user-info { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #34d399); color: white; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+        .user-name { font-size: 13px; font-weight: 600; color: white; }
+        .user-role { font-size: 11px; color: rgba(255,255,255,0.4); }
+        .logout-btn { width: 100%; padding: 0.65rem; font-size: 12px; font-weight: 500; border: 1px solid rgba(255,255,255,0.12); background: transparent; border-radius: 10px; cursor: pointer; color: rgba(255,255,255,0.6); transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .logout-btn:hover { background: #e74c3c; border-color: #e74c3c; color: white; }
+        .main { flex: 1; padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; overflow-y: auto; }
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+        .header h1 { font-size: 22px; font-weight: 700; color: #1f2937; display: flex; align-items: center; gap: 10px; }
+        .header p { font-size: 13px; color: #6b7280; margin-top: 4px; }
+        .date-badge { font-size: 12px; color: #10b981; background: #ecfdf5; padding: 6px 14px; border-radius: 20px; font-weight: 500; }
+        .live-indicator { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #6b7280; }
+        .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .live-indicator.offline .live-dot { background: #ef4444; animation: none; }
+        .live-indicator.offline { color: #ef4444; }
+        .section-title { font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px; }
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 0.5rem; }
+        .stat-card { background: white; border-radius: 14px; padding: 1.25rem; border: 0.5px solid #e5e7eb; box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: all 0.2s; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+        .stat-value { font-size: 24px; font-weight: 700; color: #1f2937; margin-bottom: 4px; }
+        .stat-label { font-size: 12px; color: #6b7280; font-weight: 500; }
+        .stat-card .stat-icon { font-size: 20px; margin-bottom: 8px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; }
+        .card { background: white; border-radius: 16px; padding: 1.5rem; border: 0.5px solid #e5e7eb; box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: all 0.25s; position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #10b981, #34d399); }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+        .card h3 { font-size: 15px; font-weight: 700; color: #1f2937; display: flex; align-items: center; gap: 8px; }
+        .card-type { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 4px; background: #dbeafe; color: #1e40af; }
+        .card-type.commande { background: #fef3c7; color: #92400e; }
+        .client-info { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #f0fdf4; border-radius: 10px; margin-bottom: 1rem; border: 1px solid #bbf7d0; }
+        .client-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #059669); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .client-details { flex: 1; }
+        .client-name { font-size: 13px; font-weight: 600; color: #166534; }
+        .client-phone { font-size: 11px; color: #15803d; }
+        .address-box { background: #f9fafb; border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; font-size: 12px; }
+        .address-box label { font-size: 10px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 4px; }
+        .address-box .address-text { color: #374151; line-height: 1.4; }
+        .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+        .badge-PLANIFIEE { background: #fef3c7; color: #92400e; }
+        .badge-EN_COURS_DE_COLLECTE { background: #dbeafe; color: #1e40af; }
+        .badge-COLLECTEE { background: #d1fae5; color: #065f46; }
+        .badge-EN_COURS_DE_LIVRAISON { background: #ede9fe; color: #5b21b6; }
+        .badge-LIVREE { background: #ecfdf5; color: #047857; }
+        .badge-ANNULEE { background: #fee2e2; color: #991b1b; }
+        .badge-RECUE { background: #fef3c7; color: #92400e; }
+        .badge-EN_LAVAGE { background: #dbeafe; color: #1e40af; }
+        .badge-EN_REPASSAGE { background: #ede9fe; color: #5b21b6; }
+        .badge-PRETE { background: #d1fae5; color: #065f46; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 11px; font-weight: 600; color: #4b5563; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .form-group select, .form-group input { width: 100%; padding: 0.6rem 0.875rem; border: 1.5px solid #e5e7eb; border-radius: 10px; font-size: 13px; color: #1f2937; background: #f9fafb; transition: all 0.2s; font-family: inherit; }
+        .form-group select:focus, .form-group input:focus { outline: none; border-color: #10b981; background: white; box-shadow: 0 0 0 3px rgba(16,185,129,0.12); }
+        .btn { width: 100%; padding: 0.65rem 1rem; border: none; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: inherit; }
+        .btn-primary { background: linear-gradient(135deg, #10b981, #059669); color: white; box-shadow: 0 4px 14px rgba(16,185,129,0.35); }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,0.45); }
+        .btn-secondary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; box-shadow: 0 4px 14px rgba(102,126,234,0.35); }
+        .btn-secondary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(102,126,234,0.45); }
+        .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; box-shadow: 0 4px 14px rgba(245,158,11,0.35); }
+        .btn-warning:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245,158,11,0.45); }
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, #e5e7eb, transparent); margin: 14px 0; border: none; }
+        .empty-state { grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: #9ca3af; }
+        .empty-state-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+        .loading { grid-column: 1 / -1; text-align: center; padding: 4rem; color: #9ca3af; }
+        .spinner { width: 32px; height: 32px; border: 3px solid #e5e7eb; border-top-color: #10b981; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .toast { position: fixed; bottom: 24px; right: 24px; background: #1f2937; color: white; padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 3000; display: flex; align-items: center; gap: 8px; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { background: linear-gradient(135deg, #10b981, #059669); }
+        .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        @media (max-width: 768px) { .sidebar { width: 200px; } .stats-row { grid-template-columns: repeat(2, 1fr); } .grid { grid-template-columns: 1fr; } .main { padding: 1rem; } }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">🚚 PressIN <b>LIVREUR</b></div>
+        <div class="nav-section">Menu</div>
+        <a class="nav-item active" href="livreur.html">📦 Mes livraisons</a>
+        <a class="nav-item" href="#" onclick="alert('Bientôt disponible !')">📍 Suivi GPS</a>
+        <a class="nav-item" href="#" onclick="alert('Bientôt disponible !')">📊 Statistiques</a>
+        <div class="sidebar-bottom">
+            <div class="user-info">
+                <div class="avatar" id="livreur-avatar">L</div>
+                <div>
+                    <div class="user-name" id="livreur-name">Livreur</div>
+                    <div class="user-role">Livreur</div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">🚪 Déconnexion</button>
+        </div>
+    </aside>
+
+    <div class="main">
+        <div class="header">
+            <div>
+                <h1>Mes livraisons 🚚</h1>
+                <p>Suivi et mise à jour de vos colis en temps réel</p>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+                <span class="date-badge" id="date-badge">Aujourd\'hui</span>
+                <div class="live-indicator" id="live-indicator">
+                    <div class="live-dot"></div>
+                    <span id="live-text">En direct</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-row" id="stats-row">
+            <div class="stat-card"><div class="stat-icon">📦</div><div class="stat-value" id="stat-total">0</div><div class="stat-label">Total</div></div>
+            <div class="stat-card"><div class="stat-icon">🚚</div><div class="stat-value" id="stat-en-cours">0</div><div class="stat-label">En cours</div></div>
+            <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-value" id="stat-livrees">0</div><div class="stat-label">Livrées</div></div>
+            <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-value" id="stat-commandes">0</div><div class="stat-label">Commandes</div></div>
+        </div>
+
+        <!-- LIVRAISONS -->
+        <div class="section-title">🚚 Mes livraisons actives</div>
+        <div class="grid" id="livraisonsContainer">
+            <div class="loading"><div class="spinner"></div><div>Chargement...</div></div>
+        </div>
+
+        <!-- COMMANDES SANS LIVRAISON -->
+        <div class="section-title" style="margin-top:1rem;">📋 Commandes à livrer (sans livraison créée)</div>
+        <div class="grid" id="commandesContainer">
+            <div class="loading"><div class="spinner"></div><div>Chargement des commandes...</div></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const API = "http://localhost:8083/rest";
+        let livreurId = null;
+        let livreurName = sessionStorage.getItem("pressin_name") || "Livreur";
+        let role = sessionStorage.getItem("pressin_role");
+        let refreshInterval = null;
+
+        if (!role || role !== "ROLE_LIVREUR") {
+            window.location.href = "login.html";
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("livreur-name").textContent = livreurName;
+            document.getElementById("livreur-avatar").textContent = livreurName.charAt(0).toUpperCase();
+            const d = new Date();
+            document.getElementById("date-badge").textContent = d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+            resolveLivreurId();
+        });
+
+        function showToast(message, type = "success") {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => toast.classList.remove("show"), 3000);
+        }
+
+        function setLiveStatus(online) {
+            const indicator = document.getElementById("live-indicator");
+            const text = document.getElementById("live-text");
+            if (online) {
+                indicator.classList.remove("offline");
+                text.textContent = "En direct";
+            } else {
+                indicator.classList.add("offline");
+                text.textContent = "Hors ligne";
+            }
+        }
+
+        async function resolveLivreurId() {
+            const rawId = sessionStorage.getItem("pressin_user_id");
+            const numericId = Number(rawId);
+            if (rawId && !isNaN(numericId) && numericId > 0) {
+                livreurId = numericId;
+                loadAll();
+                startAutoRefresh();
+                return;
+            }
+            const email = sessionStorage.getItem("pressin_email");
+            if (email) {
+                try {
+                    const res = await fetch(`${API}/user/email/${email}`);
+                    if (res.ok) {
+                        const user = await res.json();
+                        livreurId = user.id;
+                        sessionStorage.setItem("pressin_user_id", livreurId);
+                        loadAll();
+                        startAutoRefresh();
+                        return;
+                    }
+                } catch (e) {}
+            }
+            const manualId = prompt("ID livreur non trouvé. Entrez l\'ID numérique :");
+            if (manualId && !isNaN(Number(manualId))) {
+                livreurId = Number(manualId);
+                sessionStorage.setItem("pressin_user_id", livreurId);
+                loadAll();
+                startAutoRefresh();
+            }
+        }
+
+        function startAutoRefresh() {
+            if (refreshInterval) clearInterval(refreshInterval);
+            refreshInterval = setInterval(() => {
+                loadAll(true);
+            }, 10000);
+        }
+
+        async function loadAll(silent = false) {
+            if (!livreurId) return;
+            
+            if (!silent) {
+                document.getElementById("livraisonsContainer").innerHTML = `<div class="loading"><div class="spinner"></div><div>Chargement...</div></div>`;
+                document.getElementById("commandesContainer").innerHTML = `<div class="loading"><div class="spinner"></div><div>Chargement des commandes...</div></div>`;
+            }
+
+            try {
+                // 1. Charger les livraisons
+                const livRes = await fetch(`${API}/livraisons/livreur/${livreurId}`);
+                let livraisons = [];
+                if (livRes.ok) {
+                    livraisons = await livRes.json();
+                }
+
+                // 2. Charger les commandes du livreur
+                let commandes = [];
+                try {
+                    const cmdRes = await fetch(`${API}/commandes/livreur/${livreurId}`);
+                    if (cmdRes.ok) {
+                        commandes = await cmdRes.json();
+                    }
+                } catch (e) {
+                    console.log("Endpoint commandes/livreur non disponible, fallback sur commandes/all");
+                    try {
+                        const allRes = await fetch(`${API}/commandes/all`);
+                        if (allRes.ok) {
+                            const all = await allRes.json();
+                            // Filtrer celles assignées à ce livreur
+                            commandes = all.filter(c => c.livreurId === livreurId || c.livreur?.id === livreurId);
+                        }
+                    } catch (e2) {}
+                }
+
+                // 3. Filtrer les commandes qui n\'ont pas encore de livraison
+                const livraisonCommandeIds = livraisons.map(l => l.commandeId);
+                const commandesSansLivraison = commandes.filter(c => !livraisonCommandeIds.includes(c.id));
+
+                setLiveStatus(true);
+                
+                // Stats
+                const total = livraisons.length + commandesSansLivraison.length;
+                const enCours = livraisons.filter(l => l.statut === "EN_COURS_DE_COLLECTE" || l.statut === "EN_COURS_DE_LIVRAISON").length;
+                const livrees = livraisons.filter(l => l.statut === "LIVREE").length;
+                document.getElementById("stat-total").textContent = total;
+                document.getElementById("stat-en-cours").textContent = enCours;
+                document.getElementById("stat-livrees").textContent = livrees;
+                document.getElementById("stat-commandes").textContent = commandesSansLivraison.length;
+
+                renderLivraisons(livraisons);
+                renderCommandes(commandesSansLivraison);
+
+            } catch (err) {
+                console.error("Load error:", err);
+                setLiveStatus(false);
+                if (!silent) {
+                    document.getElementById("livraisonsContainer").innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">⚠️</div>
+                            <h2>Erreur de connexion</h2>
+                            <p>${err.message}</p>
+                            <button class="btn btn-primary" onclick="loadAll()" style="width:auto; margin-top:12px; padding: 8px 20px;">🔄 Réessayer</button>
+                        </div>`;
+                }
+            }
+        }
+
+        function renderLivraisons(data) {
+            const container = document.getElementById("livraisonsContainer");
+            if (!data || data.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <h2>Aucune livraison active</h2>
+                        <p>Toutes vos livraisons sont terminées ou aucune n\'est assignée.</p>
+                    </div>`;
+                return;
+            }
+
+            const statutLabels = {
+                PLANIFIEE: "📅 Planifiée",
+                EN_COURS_DE_COLLECTE: "📍 Collecte en cours",
+                COLLECTEE: "📦 Collectée",
+                EN_COURS_DE_LIVRAISON: "🚚 Livraison en cours",
+                LIVREE: "✅ Livrée",
+                ANNULEE: "❌ Annulée"
+            };
+
+            container.innerHTML = data.map(l => renderCard(l, statutLabels, true)).join("");
+        }
+
+        function renderCommandes(data) {
+            const container = document.getElementById("commandesContainer");
+            if (!data || data.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✅</div>
+                        <h2>Toutes les commandes ont une livraison</h2>
+                        <p>Aucune commande en attente de création de livraison.</p>
+                    </div>`;
+                return;
+            }
+
+            const statutLabels = {
+                RECUE: "🆕 Reçue",
+                EN_LAVAGE: "🫧 En lavage",
+                EN_REPASSAGE: "👔 En repassage",
+                EN_LIVRAISON: "🚚 En livraison",
+                PRETE: "✅ Prête",
+                LIVREE: "📬 Livrée",
+                ANNULEE: "❌ Annulée"
+            };
+
+            container.innerHTML = data.map(c => renderCard(c, statutLabels, false)).join("");
+        }
+
+        function renderCard(item, statutLabels, isLivraison) {
+            const client = item.client || item.commande?.client || {};
+            const clientName = client.firstname && client.lastname 
+                ? `${client.firstname} ${client.lastname}` 
+                : (client.firstname || "Client inconnu");
+            const clientPhone = client.telephone || "Non renseigné";
+            const clientInitial = clientName.charAt(0).toUpperCase();
+
+            const collecteAddr = item.collecteRue && item.collecteVille 
+                ? `${item.collecteRue}, ${item.collecteVille} ${item.collecteCodePostal || ""}` 
+                : (item.adresseCollecte?.rue ? `${item.adresseCollecte.rue}, ${item.adresseCollecte.ville}` : "Non renseignée");
+            const destAddr = item.destRue && item.destVille 
+                ? `${item.destRue}, ${item.destVille} ${item.destCodePostal || ""}` 
+                : (item.adresseLivraison?.rue ? `${item.adresseLivraison.rue}, ${item.adresseLivraison.ville}` : "Non renseignée");
+
+            const id = item.id;
+            const typeLabel = isLivraison ? "Livraison" : "Commande";
+            const typeClass = isLivraison ? "" : "commande";
+
+            if (isLivraison) {
+                return `
+                <div class="card" id="card-${id}">
+                    <div class="card-header">
+                        <h3>🧾 #${item.commandeId ?? item.commande?.id ?? id}</h3>
+                        <span class="card-type ${typeClass}">${typeLabel}</span>
+                        <span class="badge badge-${item.statut}">${statutLabels[item.statut] || item.statut}</span>
+                    </div>
+                    <div class="client-info">
+                        <div class="client-avatar">${clientInitial}</div>
+                        <div class="client-details">
+                            <div class="client-name">👤 ${clientName}</div>
+                            <div class="client-phone">📞 ${clientPhone}</div>
+                        </div>
+                    </div>
+                    <div class="address-box">
+                        <label>📍 Collecte</label>
+                        <div class="address-text">${collecteAddr}</div>
+                    </div>
+                    <div class="address-box">
+                        <label>🏠 Livraison</label>
+                        <div class="address-text">${destAddr}</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Changer statut</label>
+                        <select id="statut-${id}">
+                            <option value="PLANIFIEE" ${item.statut === "PLANIFIEE" ? "selected" : ""}>📅 Planifiée</option>
+                            <option value="EN_COURS_DE_COLLECTE" ${item.statut === "EN_COURS_DE_COLLECTE" ? "selected" : ""}>📍 En cours de collecte</option>
+                            <option value="COLLECTEE" ${item.statut === "COLLECTEE" ? "selected" : ""}>📦 Collectée</option>
+                            <option value="EN_COURS_DE_LIVRAISON" ${item.statut === "EN_COURS_DE_LIVRAISON" ? "selected" : ""}>🚚 En cours de livraison</option>
+                            <option value="LIVREE" ${item.statut === "LIVREE" ? "selected" : ""}>✅ Livrée</option>
+                            <option value="ANNULEE" ${item.statut === "ANNULEE" ? "selected" : ""}>❌ Annulée</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="updateStatut(${id})">💾 Mettre à jour</button>
+                    <hr class="divider">
+                    <div class="form-group">
+                        <label>📅 Date collecte effective</label>
+                        <input type="datetime-local" id="c-${id}" value="${item.dateCollecteEffective ? new Date(item.dateCollecteEffective).toISOString().slice(0, 16) : ""}">
+                    </div>
+                    <div class="form-group">
+                        <label>📅 Date livraison effective</label>
+                        <input type="datetime-local" id="d-${id}" value="${item.dateLivraisonEffective ? new Date(item.dateLivraisonEffective).toISOString().slice(0, 16) : ""}">
+                    </div>
+                    <button class="btn btn-secondary" onclick="updateDates(${id})">📆 Enregistrer dates</button>
+                </div>`;
+            } else {
+                // Commande sans livraison - bouton pour créer livraison
+                return `
+                <div class="card" id="card-cmd-${id}" style="border-left: 4px solid #f59e0b;">
+                    <div class="card-header">
+                        <h3>📋 #${id}</h3>
+                        <span class="card-type ${typeClass}">${typeLabel}</span>
+                        <span class="badge badge-${item.statut}">${statutLabels[item.statut] || item.statut}</span>
+                    </div>
+                    <div class="client-info" style="background: #fffbeb; border-color: #fcd34d;">
+                        <div class="client-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">${clientInitial}</div>
+                        <div class="client-details">
+                            <div class="client-name" style="color: #92400e;">👤 ${clientName}</div>
+                            <div class="client-phone" style="color: #a16207;">📞 ${clientPhone}</div>
+                        </div>
+                    </div>
+                    <div class="address-box">
+                        <label>📍 Adresse client</label>
+                        <div class="address-text">${client.adresse?.rue ? `${client.adresse.rue}, ${client.adresse.ville}` : "Non renseignée"}</div>
+                    </div>
+                    <button class="btn btn-warning" onclick="creerLivraison(${id})">➕ Créer une livraison</button>
+                </div>`;
+            }
+        }
+
+        async function updateStatut(id) {
+            const statut = document.getElementById(`statut-${id}`).value;
+            try {
+                const res = await fetch(`${API}/livraisons/statut/${id}?statut=${statut}`, { method: "PUT" });
+                if (!res.ok) throw new Error("Erreur modification");
+                showToast("✅ Statut mis à jour !");
+                loadAll();
+            } catch (err) {
+                showToast("❌ Erreur: " + err.message, "error");
+            }
+        }
+
+        async function updateDates(id) {
+            const c = document.getElementById(`c-${id}`).value;
+            const d = document.getElementById(`d-${id}`).value;
+            const params = new URLSearchParams();
+            if (c) params.append("dateCollecte", c);
+            if (d) params.append("dateLivraison", d);
+            try {
+                const res = await fetch(`${API}/livraisons/dates/${id}?${params}`, { method: "PUT" });
+                if (!res.ok) throw new Error("Erreur dates");
+                showToast("✅ Dates enregistrées !");
+                loadAll();
+            } catch (err) {
+                showToast("❌ Erreur: " + err.message, "error");
+            }
+        }
+
+        async function creerLivraison(commandeId) {
+            try {
+                const res = await fetch(`${API}/livraisons/create/${commandeId}/${livreurId}`, { method: "POST" });
+                if (!res.ok) throw new Error("Erreur création");
+                showToast("✅ Livraison créée !");
+                loadAll();
+            } catch (err) {
+                showToast("❌ Erreur: " + err.message, "error");
+            }
+        }
+
+        function logout() {
+            if (confirm("Confirmer la déconnexion ?")) {
+                if (refreshInterval) clearInterval(refreshInterval);
+                sessionStorage.clear();
+                window.location.href = "login.html";
+            }
+        }
+
+        window.addEventListener("beforeunload", () => {
+            if (refreshInterval) clearInterval(refreshInterval);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+
+    <style>
+        /* Smooth UI */
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: #f5f7ff;
+        }
+
+        .rh-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* Sidebar modernisée */
+        .sidebar {
+            background: linear-gradient(180deg, #1f2937, #111827);
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Active menu glow */
+        .nav-item.active {
+            background: rgba(102, 126, 234, 0.25);
+            border-left: 3px solid #667eea;
+            color: #fff;
+        }
+
+        /* Cards smoother */
+        .card {
+            border-radius: 16px;
+            transition: all 0.25s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Buttons nicer */
+        button,
+        .card-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+
+        button:hover,
+        .card-btn:hover {
+            transform: scale(1.03);
+        }
+
+        /* Quick actions */
+        .qa-card {
+            border-radius: 12px;
+            transition: 0.2s;
+        }
+
+        .qa-card:hover {
+            background: #7a0697;
+            color: white;
+        }
+
+        /* Header */
+        .welcome-header h1 {
+            font-size: 22px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: #f4f6fb;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* === SIDEBAR === */
+        .sidebar {
+            width: 230px;
+            background: #440555;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            min-height: 100vh;
+        }
+
+        .sidebar-logo {
+            padding: 1.25rem 1rem;
+            font-size: 15px;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-badge {
+            background: rgba(102, 126, 234, .3);
+            color: #a5b4fc;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .nav-section {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: rgba(255, 255, 255, .35);
+            padding: .875rem 1rem .3rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, .65);
+            padding: .6rem 1rem;
+            font-size: 13px;
+            cursor: pointer;
+            border-left: 2px solid transparent;
+            transition: all .2s;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, .06);
+            color: white;
+            border-left-color: rgba(255, 255, 255, .2);
+        }
+
+        .nav-item.active {
+            background: rgba(102, 126, 234, .2);
+            color: #a5b4fc;
+            border-left-color: #667eea;
+        }
+
+        .nav-icon {
+            font-size: 14px;
+            width: 18px;
+            text-align: center;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, .08);
+            padding: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: .75rem;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(102, 126, 234, .3);
+            color: #a5b4fc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: white;
+        }
+
+        .user-role {
+            font-size: 10px;
+            color: rgba(255, 255, 255, .4);
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: .55rem;
+            font-size: 12px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            color: rgba(255, 255, 255, .6);
+            transition: all .2s;
+        }
+
+        .logout-btn:hover {
+            background: #e74c3c;
+            border-color: #e74c3c;
+            color: white;
+        }
+
+        /* === MAIN === */
+        .main {
+            flex: 1;
+            background: #f4f6fb;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .welcome-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .welcome-header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2f3542;
+        }
+
+        .welcome-header p {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .date-badge {
+            font-size: 11px;
+            color: #667eea;
+            background: #eef0fd;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* === CARDS === */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 0.5px solid #e8eaf0;
+            transition: all .2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .07);
+        }
+
+        .card-icon {
+            font-size: 22px;
+            margin-bottom: .75rem;
+        }
+
+        .card h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2f3542;
+            margin-bottom: 4px;
+        }
+
+        .card p {
+            font-size: 12px;
+            color: #888;
+            line-height: 1.5;
+            margin-bottom: .875rem;
+        }
+
+        /* === BUTTONS === */
+        button,
+        .card-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: .5rem 1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .2s;
+            text-decoration: none;
+        }
+
+        button:hover,
+        .card-btn:hover {
+            background: #5a6fd6;
+            transform: translateY(-1px);
+        }
+
+        button.logout {
+            background: #e74c3c;
+            margin-top: 1rem;
+        }
+
+        button.logout:hover {
+            background: #c0392b;
+        }
+
+        /* === QUICK ACTIONS === */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .qa-card {
+            background: white;
+            border: 0.5px solid #e8eaf0;
+            border-radius: 10px;
+            padding: .875rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s;
+            text-decoration: none;
+        }
+
+        .qa-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .qa-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .qa-label {
+            font-size: 11px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2f3542;
+            margin-bottom: .5rem;
+        }
+
+        /* === MODAL === */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 14px;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 360px;
+        }
+
+        .modal h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2f3542;
+            margin-bottom: 1rem;
+        }
+
+        .modal select {
+            width: 100%;
+            padding: .6rem .875rem;
+            border-radius: 8px;
+            border: 0.5px solid #ddd;
+            font-size: 13px;
+            margin-bottom: 1rem;
+            color: #2f3542;
+        }
+
+        .modal-btns {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .btn-cancel {
+            padding: .5rem 1rem;
+            border: 0.5px solid #ddd;
+            border-radius: 8px;
+            background: transparent;
+            font-size: 12px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .btn-save {
+            padding: .5rem 1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* ============================================================ */
+        /* ==========  FORMULAIRE LIVREUR AMÉLIORÉ  =================== */
+        /* ============================================================ */
+
+        .livreur-form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 0.5px solid #e8eaf0;
+            transition: all .25s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .livreur-form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .livreur-form-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .livreur-form-card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2f3542;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .livreur-form-card h3 .icon-title {
+            font-size: 18px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: .75rem 1rem .75rem 2.5rem;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #1f2937;
+            background: #f9fafb;
+            transition: all 0.2s ease;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.12);
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        .form-group .input-icon {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            font-size: 14px;
+            color: #9ca3af;
+            pointer-events: none;
+            transition: color 0.2s ease;
+        }
+
+        .form-group input:focus + .input-icon,
+        .form-group input:not(:placeholder-shown) + .input-icon {
+            color: #667eea;
+        }
+
+        /* Deux colonnes pour Prénom / Nom */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn-create-livreur {
+            width: 100%;
+            padding: .75rem 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.35);
+        }
+
+        .btn-create-livreur:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45);
+        }
+
+        .btn-create-livreur:active {
+            transform: translateY(0);
+        }
+
+        /* Liste des livreurs améliorée */
+        .livreur-list-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 0.5px solid #e8eaf0;
+            transition: all .25s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .livreur-list-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #34d399);
+        }
+
+        .livreur-list-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .livreur-list-card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2f3542;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .livreur-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            background: #f9fafb;
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .livreur-item:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+            transform: translateX(4px);
+        }
+
+        .livreur-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .livreur-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .livreur-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .livreur-email {
+            font-size: 11px;
+            color: #6b7280;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .livreur-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            flex-shrink: 0;
+        }
+
+        .livreur-empty {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        .livreur-empty-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .rh-container {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            🧺 PressIN <span class="sidebar-badge">ADMIN</span>
+        </div>
+
+        <div class="nav-section">Principal</div>
+        <a class="nav-item active" href="admin.html">📊 Tableau de bord</a>
+        <a class="nav-item" href="commande.html">📦 Commandes</a>
+    
+
+        <div class="nav-section">Gestion</div>
+        <a class="nav-item" href="service.html">✨ Services</a>
+
+
+        <div class="nav-section">Compte</div>
+        <a class="nav-item" href="profile.html">👤 Profil</a>
+
+        <div class="sidebar-bottom">
+            <div class="user-info">
+                <div class="avatar" id="av">A</div>
+                <div>
+                    <div class="user-name" id="admin-name">Admin</div>
+                    <div class="user-role">Administrateur</div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">🚪 Déconnexion</button>
+        </div>
+    </aside>
+
+
+    <div class="main">
+
+        <!-- Header -->
+        <div class="welcome-header">
+            <div>
+                <h1>Bienvenue, Administrateur 👋</h1>
+                <p>Gérez votre pressing depuis ce panneau de contrôle</p>
+            </div>
+            <span class="date-badge" id="date-badge">Aujourd\'hui</span>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="section-label">Accès rapides</div>
+        <div class="quick-actions">
+            <a href="dashbord.html" class="qa-card">📊 Dashboard</a>
+            <a href="commande.html" class="qa-card">📦 Commandes</a>
+       
+
+        </div>
+        <!-- SECTION RH LIVREURS -->
+    
+
+        <div class="rh-container">
+
+            <!-- FORMULAIRE AMÉLIORÉ -->
+            <div class="livreur-form-card">
+                <h3><span class="icon-title">➕</span> Créer un livreur</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstname">Prénom</label>
+                        <input id="firstname" placeholder="Ex: Ahmed" autocomplete="given-name">
+                        <span class="input-icon">👤</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname">Nom</label>
+                        <input id="lastname" placeholder="Ex: Benali" autocomplete="family-name">
+                        <span class="input-icon">👤</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" placeholder="ahmed.benali@email.com" autocomplete="email">
+                    <span class="input-icon">📧</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input id="password" type="password" placeholder="••••••••" autocomplete="new-password">
+                    <span class="input-icon">🔒</span>
+                </div>
+
+                <button class="btn-create-livreur" onclick="createLivreur()">
+                    <span>✨</span> Créer le livreur
+                </button>
+            </div>
+
+            <!-- LISTE LIVREURS AMÉLIORÉE -->
+            <div class="livreur-list-card">
+                <h3><span class="icon-title">📋</span> Liste des livreurs</h3>
+                <div id="list">
+                    <div class="livreur-empty">
+                        <div class="livreur-empty-icon">🚚</div>
+                        <div>Chargement des livreurs...</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    </div>
+    <div class="modal-overlay" id="modal-statut" style="display:none;">
+        <div class="modal">
+            <h3>✏️ Modifier le statut</h3>
+            <select id="select-statut">
+                <option value="RECUE">🆕 Reçue</option>
+                <option value="EN_LAVAGE">🫧 En lavage</option>
+                <option value="EN_REPASSAGE">👔 En repassage</option>
+                <option value="EN_LIVRAISON">🚚 En livraison</option>
+                <option value="PRETE">✅ Prête</option>
+                <option value="LIVREE">📬 Livrée</option>
+                <option value="ANNULEE">❌ Annulée</option>
+            </select>
+            <div class="modal-btns">
+                <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+                <button class="btn-save" onclick="saveStatut()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-livreur" style="display:none;">
+        <div class="modal">
+            <h3>🚚 Assigner un livreur</h3>
+            <select id="select-livreur">
+                <option value="">Chargement des livreurs...</option>
+            </select>
+            <div class="modal-btns">
+                <button class="btn-cancel" onclick="closeModalLivreur()">Annuler</button>
+                <button class="btn-save" onclick="confirmerAssignationLivreur()">Assigner</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        const API_BASE_URL = 'http://localhost:8083/rest';
+
+        // ===============================
+        // 🔐 PROTECTION + SESSION
+        // ===============================
+        const role = sessionStorage.getItem("pressin_role");
+        const name = sessionStorage.getItem("pressin_name") || "Admin";
+        const userId = sessionStorage.getItem("pressin_user_id");
+
+        if (!role || role !== "ROLE_ADMIN") {
+            window.location.href = "login.html";
+        }
+
+        // ===============================
+        // 🚀 INIT
+        // ===============================
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUserDisplay();
+            setGreeting();
+            setTimeout(() => loadDashboard(), 50);
+            loadLivreurs(); // Charger les livreurs au démarrage
+        });
+
+        // ===============================
+        // 👤 AFFICHAGE USER
+        // ===============================
+        function updateUserDisplay() {
+            const nameEl = document.getElementById('user-name');
+            const avatarEl = document.getElementById('user-avatar');
+            const dashNameEl = document.getElementById('dashboard-user-name');
+
+            if (nameEl) nameEl.textContent = name;
+            if (avatarEl) avatarEl.textContent = name.charAt(0).toUpperCase();
+            if (dashNameEl) dashNameEl.textContent = name;
+        }
+
+        // ===============================
+        // 🌤️ GREETING
+        // ===============================
+        function setGreeting() {
+            const hour = new Date().getHours();
+            const el = document.getElementById('greeting');
+            if (!el) return;
+
+            if (hour < 12) el.textContent = '🌅 Bonjour';
+            else if (hour < 18) el.textContent = '☀️ Bon après-midi';
+            else el.textContent = '🌙 Bonsoir';
+        }
+
+        // ===============================
+        // 📊 DASHBOARD ADMIN — TOUTES LES COMMANDES
+        // ===============================
+        async function loadDashboard() {
+            showLoading(true);
+
+            try {
+                // ✅ Admin voit TOUTES les commandes
+                const res = await fetch(`${API_BASE_URL}/commandes/all`);
+                if (!res.ok) throw new Error("Erreur API commandes");
+
+                const commandes = await res.json();
+
+                updateStatistics(commandes);
+                displayRecentOrders(commandes.slice(0, 5));
+
+            } catch (err) {
+                console.error("Dashboard error:", err);
+                showEmptyState();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ===============================
+        // 📊 STATISTIQUES — adaptées aux nouveaux statuts
+        // ===============================
+        function updateStatistics(commandes) {
+            const total = commandes.length;
+
+            const enCours = commandes.filter(c =>
+                c.statut === 'EN_LAVAGE' ||
+                c.statut === 'EN_REPASSAGE' ||
+                c.statut === 'EN_LIVRAISON'
+            ).length;
+
+            const prete = commandes.filter(c =>
+                c.statut === 'PRETE'
+            ).length;
+
+            const livree = commandes.filter(c =>
+                c.statut === 'LIVREE'
+            ).length;
+
+            const montantTotal = commandes.reduce(
+                (sum, c) => sum + (c.montantFinal || c.montantTotal || 0), 0
+            );
+
+            // stats générales
+            const el = (id) => document.getElementById(id);
+            if (el('stat-total')) el('stat-total').textContent = total;
+            if (el('stat-en-cours')) el('stat-en-cours').textContent = enCours;
+            if (el('stat-pret')) el('stat-pret').textContent = prete;
+            if (el('stat-livree')) el('stat-livree').textContent = livree;
+            if (el('stat-montant')) el('stat-montant').textContent =
+                montantTotal.toFixed(2) + ' MAD';
+        }
+
+        // ===============================
+        // 📦 AFFICHAGE COMMANDES
+        // ===============================
+        function displayRecentOrders(commandes) {
+            const el = document.getElementById('orders-list');
+            if (!commandes || commandes.length === 0) {
+                showEmptyState();
+                return;
+            }
+            el.innerHTML = commandes.map(createOrderCard).join('');
+        }
+
+        function createOrderCard(order) {
+            const labels = {
+                RECUE: '🆕 Reçue',
+                EN_LAVAGE: '🫧 En lavage',
+                EN_REPASSAGE: '👔 En repassage',
+                EN_LIVRAISON: '🚚 En livraison',
+                PRETE: '✅ Prête',
+                LIVREE: '📬 Livrée',
+                ANNULEE: '❌ Annulée'
+            };
+            const d = new Date();
+            document.getElementById("date-badge").textContent =
+                d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+
+
+
+            const client = order.client
+                ? `${order.client.firstname || ''} ${order.client.lastname || ''}`
+                : 'Client inconnu';
+
+            const livreur = order.livreur
+                ? `${order.livreur.firstname || ''} ${order.livreur.lastname || ''}`
+                : 'Non assigné';
+
+            return `
+    <div class="order-card">
+        <div class="order-header">
+            <div>
+                <strong>${order.numeroCommande || '#' + order.id}</strong>
+                <div class="order-date">👤 ${client}</div>
+                <div class="order-date">🚚 Livreur : ${livreur}</div>
+            </div>
+            <span class="order-status status-${order.statut}">
+                ${labels[order.statut] || order.statut}
+            </span>
+        </div>
+
+        <div class="order-footer">
+            <div>📅 Collecte : ${formatDate(order.dateCollecteSouhaitee)}</div>
+            <div>📅 Livraison : ${formatDate(order.dateLivraisonSouhaitee)}</div>
+            <div class="order-total">
+                💰 ${(order.montantFinal || order.montantTotal || 0).toFixed(2)} MAD
+            </div>
+        </div>
+
+        <div class="order-actions">
+            <button onclick="changerStatut(${order.id}, '${order.statut}')">
+                ✏️ Modifier statut
+            </button>
+            <button onclick="ouvrirModalLivreur(${order.id})" style="background: linear-gradient(135deg, #10b981, #34d399);">
+                🚚 Assigner livreur
+            </button>
+        </div>
+    </div>
+    `;
+        }
+
+        // ===============================
+        // ✏️ CHANGER STATUT
+        // ===============================
+        let selectedCommandeId = null;
+
+        function changerStatut(id, statutActuel) {
+            selectedCommandeId = id;
+            document.getElementById("select-statut").value = statutActuel;
+            document.getElementById("modal-statut").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("modal-statut").style.display = "none";
+            selectedCommandeId = null;
+        }
+
+        async function saveStatut() {
+            const statut = document.getElementById("select-statut").value;
+
+            try {
+                const res = await fetch(
+                    `${API_BASE_URL}/commandes/statut/${selectedCommandeId}?statut=${statut}`,
+                    { method: "PUT" }
+                );
+
+                if (!res.ok) throw new Error("Erreur modification statut");
+
+                alert("Statut mis à jour !");
+                closeModal();
+                loadDashboard(); // ✅ recharger
+
+            } catch (err) {
+                console.error(err);
+                alert("Erreur lors de la modification");
+            }
+        }
+
+        // ===============================
+        // 📅 FORMAT DATE
+        // ===============================
+        function formatDate(date) {
+            if (!date) return '-';
+            return new Date(date).toLocaleDateString('fr-FR', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
+        }
+
+        // ===============================
+        // ⏳ UI STATES
+        // ===============================
+        function showLoading(show) {
+            const loadEl = document.getElementById('loading');
+            const listEl = document.getElementById('orders-list');
+            if (loadEl) loadEl.style.display = show ? 'block' : 'none';
+            if (listEl) listEl.style.display = show ? 'none' : 'block';
+        }
+
+        function showEmptyState() {
+            const listEl = document.getElementById('orders-list');
+            const emptyEl = document.getElementById('empty-state');
+            if (listEl) listEl.style.display = 'none';
+            if (emptyEl) emptyEl.style.display = 'block';
+        }
+
+        // ===============================
+        // 🚪 LOGOUT
+        // ===============================
+        function logout() {
+            if (confirm("Confirmer la déconnexion ?")) {
+                sessionStorage.clear();
+                window.location.href = "login.html";
+            }
+        }
+
+        // ===============================
+        // ➕ CRÉER LIVREUR
+        // ===============================
+        async function createLivreur() {
+            const firstname = document.getElementById("firstname").value.trim();
+            const lastname = document.getElementById("lastname").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+
+            // Validation basique
+            if (!firstname || !lastname || !email || !password) {
+                alert("Veuillez remplir tous les champs");
+                return;
+            }
+
+            const data = {
+                firstname: firstname,
+                lastname: lastname,
+                email: email,
+                passWord: password
+            };
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/user/admin/create-livreur`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) {
+                    alert("Livreur créé avec succès !");
+                    // Reset form
+                    document.getElementById("firstname").value = "";
+                    document.getElementById("lastname").value = "";
+                    document.getElementById("email").value = "";
+                    document.getElementById("password").value = "";
+                    loadLivreurs(); // Recharger la liste
+                } else {
+                    const err = await res.text();
+                    console.log(err);
+                    alert("Erreur lors de la création du livreur");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Erreur réseau lors de la création");
+            }
+        }
+        // ===============================
+        // 🚚 ASSIGNER LIVREUR À UNE COMMANDE
+        // ===============================
+        let selectedCommandeIdLivreur = null;
+
+        async function ouvrirModalLivreur(commandeId) {
+            selectedCommandeIdLivreur = commandeId;
+            const selectEl = document.getElementById("select-livreur");
+            selectEl.innerHTML = `<option value="">Chargement...</option>`;
+            document.getElementById("modal-livreur").style.display = "flex";
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/user/admin/livreurs`);
+                if (!res.ok) throw new Error("Erreur chargement livreurs");
+
+                const livreurs = await res.json();
+
+                if (!livreurs || livreurs.length === 0) {
+                    selectEl.innerHTML = `<option value="">Aucun livreur disponible</option>`;
+                    return;
+                }
+
+                selectEl.innerHTML = livreurs.map(l =>
+                    `<option value="${l.id}">${l.firstname} ${l.lastname}</option>`
+                ).join("");
+
+            } catch (err) {
+                console.error(err);
+                selectEl.innerHTML = `<option value="">Erreur de chargement</option>`;
+            }
+        }
+
+        function closeModalLivreur() {
+            document.getElementById("modal-livreur").style.display = "none";
+            selectedCommandeIdLivreur = null;
+        }
+
+        async function confirmerAssignationLivreur() {
+            const livreurId = document.getElementById("select-livreur").value;
+
+            if (!livreurId) {
+                alert("Veuillez sélectionner un livreur");
+                return;
+            }
+
+            try {
+                const res = await fetch(
+                    `${API_BASE_URL}/livraisons/create/${selectedCommandeIdLivreur}/${livreurId}`,
+                    { method: "POST" }
+                );
+
+                if (!res.ok) throw new Error("Erreur assignation livreur");
+
+                alert("✅ Livreur assigné avec succès !");
+                closeModalLivreur();
+                loadDashboard(); // ✅ recharger
+
+            } catch (err) {
+                console.error(err);
+                alert("❌ Erreur lors de l'assignation du livreur");
+            }
+        }
+
+        // ===============================
+        // 📋 CHARGER LIVREURS
+        // ===============================
+        async function loadLivreurs() {
+            const listEl = document.getElementById("list");
+            try {
+                const res = await fetch(`${API_BASE_URL}/user/admin/livreurs`);
+                if (!res.ok) throw new Error("Erreur chargement livreurs");
+
+                const data = await res.json();
+
+                if (!data || data.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="livreur-empty">
+                            <div class="livreur-empty-icon">🚚</div>
+                            <div>Aucun livreur enregistré</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                listEl.innerHTML = data.map(l => {
+                    const initials = (l.firstname?.charAt(0) || '') + (l.lastname?.charAt(0) || '');
+                    return `
+                        <div class="livreur-item">
+                            <div class="livreur-avatar">${initials.toUpperCase()}</div>
+                            <div class="livreur-info">
+                                <div class="livreur-name">${l.firstname} ${l.lastname}</div>
+                                <div class="livreur-email">${l.email}</div>
+                            </div>
+                            <div class="livreur-status" title="Actif"></div>
+                        </div>
+                    `;
+                }).join("");
+
+            } catch (err) {
+                console.error(err);
+                listEl.innerHTML = `
+                    <div class="livreur-empty">
+                        <div class="livreur-empty-icon">⚠️</div>
+                        <div>Impossible de charger les livreurs</div>
+                    </div>
+                `;
+            }
+        }
+    </script>
+
+</body>
+
+</html>

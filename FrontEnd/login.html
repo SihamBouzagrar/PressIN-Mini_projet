@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PressIN — Connexion / Inscription</title>
+  <link rel="icon" href="data:,">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+.back-home {
+  display: block;
+  text-align: center;
+  margin-top: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.82rem;
+  text-decoration: none;
+  position: relative;
+  z-index: 10;
+}
+
+.back-home:hover {
+  color: white;
+}
+    :root {
+      --violet: #667eea;
+      --purple: #764ba2;
+      --glass: rgba(255, 255, 255, 0.13);
+      --border: rgba(255, 255, 255, 0.25);
+      --muted: rgba(255, 255, 255, 0.6);
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .bubbles {
+  pointer-events: none;
+}
+
+    .bubble {
+      position: absolute;
+      bottom: -100px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      animation: rise linear infinite;
+    }
+
+    .bubble:nth-child(1) {
+      width: 70px;
+      height: 70px;
+      left: 8%;
+      animation-duration: 13s;
+    }
+
+    .bubble:nth-child(2) {
+      width: 45px;
+      height: 45px;
+      left: 22%;
+      animation-duration: 10s;
+      animation-delay: 2s;
+    }
+
+    .bubble:nth-child(3) {
+      width: 90px;
+      height: 90px;
+      left: 38%;
+      animation-duration: 15s;
+      animation-delay: 1s;
+    }
+
+    .bubble:nth-child(4) {
+      width: 60px;
+      height: 60px;
+      left: 58%;
+      animation-duration: 11s;
+      animation-delay: 3s;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 13px;
+      background: white;
+      color: #764ba2;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      margin-top: 10px;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-login:active {
+      transform: scale(0.98);
+    }
+
+    @keyframes rise {
+      0% {
+        bottom: -100px;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        bottom: 110vh;
+        transform: translateX(60px) scale(.5);
+        opacity: 0;
+      }
+    }
+
+    .card {
+      position: relative;
+      z-index: 2;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 40px 38px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+      animation: fadeUp .7s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .card-logo {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .card-tagline {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-bottom: 26px;
+    }
+
+    .mode-tabs {
+      display: flex;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 14px;
+      padding: 4px;
+      margin-bottom: 22px;
+    }
+
+    .mode-tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all .3s;
+      user-select: none;
+    }
+
+    .mode-tab.active {
+      background: white;
+      color: var(--violet);
+    }
+
+    .role-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .role-tab {
+      flex: 1;
+      text-align: center;
+      padding: 8px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.86rem;
+      cursor: pointer;
+      color: var(--muted);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: transparent;
+      transition: all .2s;
+    }
+
+    .role-tab.active {
+      background: white;
+      color: var(--violet);
+      border-color: white;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      color: white;
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all .2s;
+    }
+
+    .form-group input::placeholder {
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    .form-group input:focus {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .msg {
+      display: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.83rem;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .msg.show {
+      display: block;
+    }
+
+    .msg-error {
+      background: rgba(255, 80, 80, 0.2);
+      border: 1px solid rgba(255, 80, 80, 0.4);
+      color: #ffb3b3;
+    }
+
+    .msg-success {
+      background: rgba(80, 200, 120, 0.2);
+      border: 1px solid rgba(80, 200, 120, 0.4);
+      color: #80e0a0;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 13px;
+      background: white;
+      color: var(--violet);
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all .3s;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-submit:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .back-home {
+      display: block;
+      text-align: center;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-decoration: none;
+    }
+
+    .back-home:hover {
+      color: white;
+    }
+
+    .btn-inscription {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      color: white;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      text-decoration: none;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-inscription:hover {
+      background: white;
+      color: #764ba2;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bubbles">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-logo">🧺 PressIN</div>
+    <div class="card-tagline">Votre pressing professionnel à portée de clic</div>
+    <div class="mode-tabs">
+      <div class="mode-tab active">🔐 Connexion</div>
+
+      <a href="register.html" class="btn-inscription">✏️ Inscription</a>
+    </div> <!-- LOGIN -->
+    <div class="panel active" id="panel-login">
+      <div class="role-tabs">
+        <div class="role-tab active" data-role="CLIENT" onclick="selectRole(this)">👤 Client</div>
+        <div class="role-tab" data-role="ADMIN" onclick="selectRole(this)">🛡️ Admin</div>
+        
+      </div>
+      <div id="login-error" class="error-msg" style="color: red; margin: 10px 0;"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="email" placeholder="votre@email.com"></div>
+      <div class="form-group"><label>Mot de passe</label><input type="password" id="password" placeholder="••••••••">
+      </div>
+      <button type="button" onclick="login()" class="btn-login">
+        Se connecter
+      </button>
+    </div>
+<a href="index.html" class="back-home">← Retour à l'accueil</a>
+  </div>
+  <script src="js/auth.js"></script>
+  <script>
+
+   async function login() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const errorEl = document.getElementById("login-error");
+  errorEl.textContent = "";
+
+  if (!email || !password) {
+    errorEl.textContent = "Veuillez remplir tous les champs.";
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:8083/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+        passWord: password
+      })
+    });
+
+    if (!res.ok) {
+      errorEl.textContent = "Email ou mot de passe incorrect.";
+      return;
+    }
+
+    const user = await res.json();
+    console.log("USER REÇU:", user);
+   const role = (user.role || "").trim().toUpperCase();
+
+console.log("ROLE =", role);
+
+sessionStorage.setItem("pressin_role", role);
+sessionStorage.setItem("pressin_user_id", user.id);
+sessionStorage.setItem("pressin_email", user.email);
+sessionStorage.setItem("pressin_name", user.firstname || "");
+
+if (!role) {
+    errorEl.textContent = "Rôle introuvable";
+    return;
+}
+
+switch (role) {
+    case "ROLE_ADMIN":
+        window.location.href = "admin.html";
+        break;
+
+    case "ROLE_CLIENT":
+        window.location.href = "client.html"; // ou index.html MAIS PAS LES DEUX
+        break;
+ case "ROLE_LIVREUR":
+        window.location.href = "livreur.html";
+        break;
+
+   default:
+        errorEl.textContent = "Rôle invalide: " + role;
+}
+
+  } catch (error) {
+    console.error(error);
+    errorEl.textContent = "Impossible de contacter le serveur.";
+  }
+}
+  </script>
+
+</body>
+
+</html>

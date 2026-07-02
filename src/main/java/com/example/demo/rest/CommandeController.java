@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -199,6 +200,13 @@ public ResponseEntity<?> createCommande(
         return ResponseEntity.ok(commandeService.findByStatut(statut));
     }
 
+@PutMapping("/statut/{id}")
+public ResponseEntity<Commande> updateStatut(
+        @PathVariable Long id,
+        @RequestParam Commande.StatutCommande statut) {
+
+    return ResponseEntity.ok(commandeService.updateStatut(id, statut));
+}
     // =========================
     // DELETE
     // =========================

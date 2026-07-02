@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle Commande - PressIN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #6c63ff;
+            --secondary: #8b5cf6;
+            --accent: #4f46e5;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at top left, rgba(108, 99, 255, 0.15), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(139, 92, 246, 0.12), transparent 30%),
+                #f1f5f9;
+
+            min-height: 100vh;
+            color: var(--dark);
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            backdrop-filter: blur(14px);
+            background: rgba(255, 255, 255, 0.8);
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+
+            padding: 18px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo-icon {
+            width: 52px;
+            height: 52px;
+
+            border-radius: 16px;
+
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            color: white;
+            font-size: 1.4rem;
+
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--gray);
+
+            padding: 10px 18px;
+
+            border-radius: 12px;
+
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .container {
+            max-width: 1250px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 35px;
+        }
+
+        /* ================= CARD ================= */
+
+        .form-card {
+            background: rgba(255, 255, 255, 0.75);
+
+            backdrop-filter: blur(10px);
+
+            border: 1px solid rgba(255, 255, 255, 0.4);
+
+            border-radius: 28px;
+
+            padding: 45px;
+
+            box-shadow:
+                0 10px 35px rgba(0, 0, 0, 0.07),
+                0 2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-section {
+            margin-bottom: 45px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ================= SELECT ================= */
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .form-select {
+            width: 100%;
+
+            padding: 16px 18px;
+
+            border-radius: 14px;
+
+            border: 2px solid #e2e8f0;
+
+            font-size: 1rem;
+
+            transition: all 0.3s ease;
+
+            background: white;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+
+            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.15);
+        }
+
+        /* ================= CLOTHES ================= */
+
+        .clothing-grid,
+        .service-grid {
+            display: grid;
+            gap: 18px;
+        }
+
+        .clothing-grid {
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        }
+
+        .service-grid {
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        }
+
+        .clothing-card,
+        .service-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .clothing-card {
+            background: white;
+
+            border-radius: 18px;
+
+            border: 2px solid #e2e8f0;
+
+            padding: 25px 15px;
+
+            text-align: center;
+
+            font-weight: 600;
+        }
+
+        .clothing-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .clothing-card.selected {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-color: transparent;
+        }
+
+        /* ================= SERVICES ================= */
+
+        .service-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            background: white;
+
+            border-radius: 18px;
+
+            border: 2px solid #e2e8f0;
+
+            padding: 22px;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.08);
+        }
+
+        .service-card.selected {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.08);
+        }
+
+        .service-checkbox {
+            width: 26px;
+            height: 26px;
+
+            border-radius: 8px;
+
+            border: 2px solid #cbd5e1;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            transition: 0.3s;
+        }
+
+        .service-card.selected .service-checkbox {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* ================= QUANTITY ================= */
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .quantity-btn {
+            width: 48px;
+            height: 48px;
+
+            border-radius: 14px;
+
+            border: none;
+
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+
+            color: white;
+
+            font-size: 1.4rem;
+
+            cursor: pointer;
+
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            transform: scale(1.08);
+        }
+
+        .quantity-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* ================= ORDER ITEMS ================= */
+
+        .order-items {
+            background: #f8fafc;
+            border-radius: 22px;
+            padding: 25px;
+        }
+
+        .order-item {
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 20px;
+
+            margin-bottom: 15px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            transition: 0.3s;
+
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+
+        .order-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .item-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .item-specs {
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        .item-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .item-remove {
+            border: none;
+
+            background: rgba(239, 68, 68, 0.12);
+
+            color: var(--danger);
+
+            padding: 10px 16px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .item-remove:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* ================= SUMMARY ================= */
+
+        .order-summary {
+            margin-top: 35px;
+
+            padding: 35px;
+
+            border-radius: 24px;
+
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+
+            color: white;
+
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+
+            margin-bottom: 15px;
+
+            font-size: 1.1rem;
+        }
+
+        .summary-row.total {
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-top: 20px;
+
+            margin-top: 20px;
+
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 35px;
+        }
+
+        .btn {
+            flex: 1;
+
+            padding: 18px;
+
+            border-radius: 16px;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 1rem;
+            font-weight: 700;
+
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(108, 99, 255, 0.06);
+        }
+
+        /* ================= DEBUG ================= */
+
+        #debug-info {
+            background: #fff7ed;
+            color: #9a3412;
+
+            border: 1px solid #fdba74;
+
+            padding: 14px 18px;
+
+            border-radius: 12px;
+
+            margin-bottom: 25px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 768px) {
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .nav {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .page-title {
+                font-size: 2.2rem;
+            }
+
+            .form-card {
+                padding: 25px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .order-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+
+        /* ================= SCROLLBAR ================= */
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--primary), var(--secondary));
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">🧺</div><span>PressIN</span>
+        </div>
+        <nav class="nav">
+            <a href="index.html" class="nav-link">🏠 Accueil</a>
+            <a href="commande.html" class="nav-link">📦 Mes Commandes</a>
+            <a href="profile.html" class="nav-link">👤 Mon Profil</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <h1 class="page-title">➕ Nouvelle Commande</h1>
+        <p class="page-subtitle">Créez votre commande rapidement</p>
+
+        <!-- Info debug clientId -->
+        <div id="debug-info"></div>
+
+        <div class="form-card">
+            <div class="form-section">
+                <h2 class="section-title"><span>👕</span> Type de Vêtement</h2>
+                <div class="clothing-grid" id="clothingGrid"></div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title"><span>🧵</span> Matière</h2>
+                <div class="form-group">
+                    <label class="form-label">Sélectionnez la matière</label>
+                    <select class="form-select" id="material">
+                        <option value="">-- Choisir --</option>
+                        <option value="coton">Coton</option>
+                        <option value="jean">Jean</option>
+                        <option value="soie">Soie</option>
+                        <option value="laine">Laine</option>
+                        <option value="polyester">Polyester</option>
+                        <option value="lin">Lin</option>
+                        <option value="cuir">Cuir</option>
+                        <option value="synthétique">Synthétique</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title"><span>✨</span> Services Demandés</h2>
+                <div class="service-grid" id="serviceGrid"></div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title"><span>🔢</span> Quantité</h2>
+                <div class="quantity-control">
+                    <button class="quantity-btn" onclick="decreaseQuantity()">−</button>
+                    <span class="quantity-value" id="quantity">1</span>
+                    <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                </div>
+            </div>
+<div>
+<select id="typeLivraison">
+    <option value="EN_MAGASIN">Magasin</option>
+    <option value="A_DOMICILE">Domicile</option>
+</select>
+</div>
+
+<div id="adresseBox" style="display:none;">
+    <input id="rue" placeholder="Rue">
+    <input id="ville" placeholder="Ville">
+    <input id="codePostal" placeholder="Code postal">
+    <input id="pays" placeholder="Pays">
+</div>
+
+
+            <button class="btn btn-primary" style="margin-bottom:20px;" onclick="addItem()">➕ Ajouter à la
+                commande</button>
+
+            <div class="form-section">
+                <h2 class="section-title"><span>📋</span> Articles de la commande</h2>
+                <div class="order-items" id="orderItems">
+                    <p style="text-align:center;color:#999;">Aucun article ajouté</p>
+                </div>
+            </div>
+
+            <div class="order-summary" id="orderSummary" style="display:none;">
+                <h3 style="margin-bottom:20px;font-size:1.5em;">📊 Résumé</h3>
+                <div class="summary-row"><span>Nombre d'articles:</span><span id="totalItems">0</span></div>
+                <div class="summary-row"><span>Sous-total:</span><span id="subtotal">0 MAD</span></div>
+                <div class="summary-row"><span>TVA (20%):</span><span id="tax">0 MAD</span></div>
+                <div class="summary-row total"><span>Total:</span><span id="total">0 MAD</span></div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="cancelOrder()">❌ Annuler</button>
+                <button class="btn btn-primary" id="btn-valider" onclick="validateOrder()">✅ Valider</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const role = sessionStorage.getItem("pressin_role");
+
+if (!role || role !== "ROLE_CLIENT") {
+    window.location.href = "login.html";
+}
+        function getClientId() {
+    return sessionStorage.getItem("pressin_user_id");
+}
+
+        // Afficher info debug
+        window.addEventListener('DOMContentLoaded', () => {
+            const clientId = getClientId();
+            const debugDiv = document.getElementById('debug-info');
+            if (!clientId) {
+                debugDiv.innerHTML = '⚠️ clientId non trouvé dans localStorage. <strong>Connectez-vous d\'abord</strong> ou <a href="#" onclick="forcerClientId()">cliquer ici pour tester avec ID=1</a>';
+                debugDiv.style.display = 'block';
+            } else {
+                debugDiv.innerHTML = ` Client connecté`;
+                debugDiv.style.background = '#d4edda';
+                debugDiv.style.borderColor = '#28a745';
+                debugDiv.style.color = '#155724';
+            }
+        });
+
+        const clothingTypes = [
+            { id: 'chemise', name: 'Chemise', icon: '👔', basePrice: 15 },
+            { id: 'pantalon', name: 'Pantalon', icon: '👖', basePrice: 18 },
+            { id: 'robe', name: 'Robe', icon: '👗', basePrice: 25 },
+            { id: 'pull', name: 'Pull', icon: '🧥', basePrice: 20 },
+            { id: 'tshirt', name: 'T-shirt', icon: '👕', basePrice: 12 },
+            { id: 'jupe', name: 'Jupe', icon: '🩱', basePrice: 16 },
+            { id: 'costume', name: 'Costume', icon: '🤵', basePrice: 35 },
+            { id: 'manteau', name: 'Manteau', icon: '🧥', basePrice: 30 }
+        ];
+
+        const services = [
+            { id: 'nettoyage', name: 'Nettoyage', price: 10, icon: '🧼' },
+            { id: 'repassage', name: 'Repassage', price: 20, icon: '🔥' },
+            { id: 'detachage', name: 'Détachage', price: 30, icon: '🎨' },
+            { id: 'pliage', name: 'Pliage', price: 40, icon: '📦' }
+        ];
+
+        let selectedClothing = null;
+        let selectedServices = new Set();
+        let quantity = 1;
+        let orderItems = [];
+
+        function init() { renderClothingGrid(); renderServiceGrid(); }
+
+        function renderClothingGrid() {
+            document.getElementById('clothingGrid').innerHTML = clothingTypes.map(c => `
+                <div class="clothing-card" onclick="selectClothing('${c.id}', event)">
+                    <div>${c.icon}</div>
+                    <div>${c.name}</div>
+                </div>`).join('');
+        }
+
+        function renderServiceGrid() {
+            document.getElementById('serviceGrid').innerHTML = services.map(s => `
+                <div class="service-card" onclick="toggleService('${s.id}', event)">
+                    <div class="service-checkbox"></div>
+                    <div class="service-info">
+                        <div class="service-name">${s.icon} ${s.name}</div>
+                        <div class="service-price">+${s.price} MAD</div>
+                    </div>
+                </div>`).join('');
+        }
+
+        function selectClothing(id, event) {
+            selectedClothing = id;
+            document.querySelectorAll('.clothing-card').forEach(c => c.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+        }
+
+        function toggleService(id, event) {
+            if (selectedServices.has(id)) {
+                selectedServices.delete(id);
+                event.currentTarget.classList.remove('selected');
+                event.currentTarget.querySelector('.service-checkbox').innerHTML = '';
+            } else {
+                selectedServices.add(id);
+                event.currentTarget.classList.add('selected');
+                event.currentTarget.querySelector('.service-checkbox').innerHTML = '✓';
+            }
+        }
+
+        function increaseQuantity() { quantity++; document.getElementById('quantity').textContent = quantity; }
+        function decreaseQuantity() { if (quantity > 1) { quantity--; document.getElementById('quantity').textContent = quantity; } }
+
+        function addItem() {
+            if (!selectedClothing) { alert('Sélectionnez un vêtement'); return; }
+            const material = document.getElementById('material').value;
+            if (!material) { alert('Choisissez une matière'); return; }
+            if (selectedServices.size === 0) { alert('Choisissez au moins un service'); return; }
+            const c = clothingTypes.find(cl => cl.id === selectedClothing);
+            const sList = Array.from(selectedServices).map(id => services.find(s => s.id === id));
+            const itemPrice = c.basePrice + sList.reduce((sum, s) => sum + s.price, 0);
+            orderItems.push({
+    id: Date.now(),
+    clothing: c.name,        // ← le nom du vêtement est ici
+    clothingIcon: c.icon,
+    material,
+    services: sList.map(s => s.name).join(', '),
+    quantity,
+    price: itemPrice * quantity
+});
+            renderOrderItems(); updateSummary(); resetForm();
+        }
+
+        function renderOrderItems() {
+            const container = document.getElementById('orderItems');
+            if (orderItems.length === 0) {
+                container.innerHTML = '<p style="text-align:center;color:#999;">Aucun article ajouté</p>';
+                return;
+            }
+            container.innerHTML = orderItems.map(i => `
+                <div class="order-item">
+                    <div class="item-details">
+                        <div class="item-name">${i.clothingIcon} ${i.clothing} x${i.quantity}</div>
+                        <div class="item-specs">Matière: ${i.material} | Services: ${i.services}</div>
+                    </div>
+                    <div class="item-price">${i.price} MAD</div>
+                    <button class="item-remove" onclick="removeItem(${i.id})">🗑️ Retirer</button>
+                </div>`).join('');
+        }
+
+        function removeItem(id) { orderItems = orderItems.filter(i => i.id !== id); renderOrderItems(); updateSummary(); }
+
+        function updateSummary() {
+            const div = document.getElementById('orderSummary');
+            if (orderItems.length === 0) { div.style.display = 'none'; return; }
+            div.style.display = 'block';
+            const subtotal = orderItems.reduce((s, i) => s + i.price, 0);
+            const tax = subtotal * 0.2;
+            const total = subtotal + tax;
+            document.getElementById('totalItems').textContent = orderItems.length;
+            document.getElementById('subtotal').textContent = subtotal.toFixed(2) + ' MAD';
+            document.getElementById('tax').textContent = tax.toFixed(2) + ' MAD';
+            document.getElementById('total').textContent = total.toFixed(2) + ' MAD';
+        }
+
+        function resetForm() {
+            selectedClothing = null; selectedServices.clear(); quantity = 1;
+            document.querySelectorAll('.clothing-card').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.service-card').forEach(c => {
+                c.classList.remove('selected');
+                c.querySelector('.service-checkbox').innerHTML = '';
+            });
+            document.getElementById('material').value = '';
+            document.getElementById('quantity').textContent = '1';
+        }
+document.getElementById("typeLivraison").addEventListener("change", function () {
+    const isHome = this.value === "A_DOMICILE";
+    document.getElementById("adresseBox").style.display = isHome ? "block" : "none";
+});
+        // ============================================================
+        // ✅ FONCTION VALIDER CORRIGÉE
+        // ============================================================
+        async function validateOrder() {
+
+    const now = new Date(); // ✅ FIX IMPORTANT
+
+    console.log("ORDER ITEMS FINAL =", orderItems);
+    const orderItemsClean = orderItems.filter(i => i && i.price);
+
+   if (!orderItemsClean.length) {
+    alert("Ajoutez des articles");
+    return;
+}
+
+    const clientId = getClientId();
+    if (!clientId) {
+        alert("Session expirée. Veuillez vous reconnecter.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    const subtotal = orderItems.reduce((s, i) => s + i.price, 0);
+ const typeLivraisonEl = document.getElementById("typeLivraison");
+
+let typeLivraison = document.getElementById("typeLivraison")?.value;
+
+console.log("RAW TYPE LIVRAISON =", typeLivraison);
+
+if (typeLivraison !== "A_DOMICILE" && typeLivraison !== "EN_MAGASIN") {
+    console.warn("Valeur invalide détectée -> fallback EN_MAGASIN");
+    typeLivraison = "EN_MAGASIN";
+}
+
+console.log("TYPE LIVRAISON FINAL =", typeLivraison);
+
+    let adresse = {
+    rue: document.getElementById("rue")?.value?.trim() || null,
+    ville: document.getElementById("ville")?.value?.trim() || null,
+    codePostal: document.getElementById("codePostal")?.value?.trim() || null,
+    pays: document.getElementById("pays")?.value?.trim() || "Maroc"
+};
+
+   if (typeLivraison === "A_DOMICILE") {
+    if (!adresse.rue || !adresse.ville) {
+        alert("Adresse obligatoire");
+        return;
+    }
+}
+
+
+
+    const total = +(subtotal * 1.2).toFixed(2); // TVA 20%
+
+  const body = {
+    dateCollecteSouhaitee: now.toISOString().split("T")[0],
+    dateLivraisonSouhaitee: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000)
+        .toISOString().split("T")[0],
+
+    typeLivraison: typeLivraison,
+
+    montantTotal: subtotal,
+    montantRemise: subtotal * 0.2,
+
+    adresseLivraison: adresse,
+    
+articles: orderItems.map(item => ({
+        nom: item.clothing,
+        price: item.price
+    }))
+};
+
+
+
+            const url = `http://localhost:8083/rest/commandes/create/${clientId}`;
+            console.log("URL:", url);
+            console.log("Body:", JSON.stringify(body));
+
+            const btn = document.getElementById("btn-valider");
+            btn.disabled = true;
+            btn.textContent = "⏳ Envoi en cours...";
+
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body)
+                });
+
+                const texte = await response.text();
+                console.log("Status:", response.status);
+                console.log("Réponse:", texte);
+
+                if (!response.ok) {
+                    alert("Erreur serveur (" + response.status + ") :\n" + texte);
+                    return;
+                }
+
+                const commande = JSON.parse(texte);
+                alert("✅ Commande validée avec succès !\nN° " + commande.numeroCommande);
+
+                orderItems = [];
+                renderOrderItems();
+                updateSummary();
+                resetForm();
+                window.location.href = "commande.html";
+
+            } catch (err) {
+                console.error("Erreur réseau:", err);
+                alert("Erreur réseau :\n" + err.message + "\n\nVérifiez que le serveur Spring Boot tourne sur le port 8083.");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "✅ Valider";
+            }
+        }
+
+        function cancelOrder() {
+            if (orderItems.length > 0) {
+                if (confirm('Annuler la commande ?')) { orderItems = []; renderOrderItems(); updateSummary(); resetForm(); }
+            } else {
+                window.location.href = 'dashbord.html';
+            }
+        }
+
+        document.getElementById("typeLivraison").addEventListener("change", function () {
+    document.getElementById("adresseBox").style.display =
+        this.value === "A_DOMICILE" ? "block" : "none";
+});
+document.getElementById("typeLivraison").addEventListener("input", (e) => {
+    console.log("CHANGE EVENT =", e.target.value);
+});
+        init();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PressIN - Inscription</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Styles globaux */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        /* Carte formulaire */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            animation: fadeInUp 1s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Titres */
+        .card h2 {
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 2rem;
+        }
+
+        /* Champs de formulaire */
+        .card input {
+            width: 100%;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .card input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Boutons */
+        .card button {
+            width: 100%;
+            padding: 15px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background: #667eea;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .card button:hover {
+            background: #764ba2;
+        }
+
+        /* Liens et messages */
+        .card p {
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .card a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .card a:hover {
+            text-decoration: underline;
+        }
+
+        .custom-select {
+            width: 100%;
+            padding: 14px 16px;
+            margin: 10px 0;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            background: #fff;
+            color: #2d3748;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            /* enlève style natif */
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg fill='%23667eea' viewBox='0 0 24 24' width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 18px;
+        }
+
+        .custom-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .custom-select:hover {
+            border-color: #667eea;
+        }
+
+        /* Animation apparition */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Message d'erreur */
+        #error-register {
+            color: red;
+            font-size: 0.9rem;
+            min-height: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="auth-page">
+        <div class="card">
+            <h2>Inscription</h2>
+            <select id="register-role" class="custom-select">
+                <option value="ROLE_CLIENT">Client</option>
+                
+            </select>
+            <form onsubmit="handleRegister(event)">
+                <input type="text" id="register-nom" placeholder="Nom" required>
+                <input type="text" id="register-prenom" placeholder="Prénom" required>
+                <input type="tel" id="register-telephone" placeholder="Téléphone" required>
+                <input type="email" id="register-email" placeholder="Email" required>
+                <input type="text" id="register-adresse" placeholder="Adresse" required>
+                <input type="text" id="register-cin" placeholder="CIN" required>
+                <input type="password" id="register-password" placeholder="Mot de passe" required>
+                <button type="submit" id="btn-register">Créer mon compte</button>
+            </form>
+
+            <p>Déjà inscrit ? <a href="index.html">Se connecter</a></p>
+            <p id="error-register"></p>
+        </div>
+    </div>
+    <script src="js/auth.js"></script>
+    <script>
+
+    </script>
+</body>
+
+</html>

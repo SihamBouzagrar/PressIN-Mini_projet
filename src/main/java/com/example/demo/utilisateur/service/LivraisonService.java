@@ -1,5 +1,7 @@
 package com.example.demo.utilisateur.service;
+
 import com.example.demo.utilisateur.entity.*;
+import com.example.demo.utilisateur.entity.Livraison.StatutLivraison;
 import com.example.demo.utilisateur.repository.CommandeRepository;
 import com.example.demo.utilisateur.repository.LivraisonRepository;
 import com.example.demo.utilisateur.repository.UserRepository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class LivraisonService {
@@ -38,24 +41,16 @@ public class LivraisonService {
         return livraisonRepository.save(livraison);
     }
 
-    public Livraison changerStatut(Long id, Livraison.StatutLivraison nouveauStatut) {
+    public Livraison changerStatut(Long id, StatutLivraison nouveauStatut) {
         Livraison livraison = livraisonRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Livraison introuvable"));
-
+                .orElseThrow(() -> new RuntimeException("Livraison non trouvée"));
         livraison.setStatut(nouveauStatut);
-
-        if (nouveauStatut == Livraison.StatutLivraison.COLLECTEE)
-            livraison.setDateCollecteEffective(LocalDateTime.now());
-
-        if (nouveauStatut == Livraison.StatutLivraison.LIVREE)
-            livraison.setDateLivraisonEffective(LocalDateTime.now());
-
-        return livraisonRepository.save(livraison);
+        return livraisonRepository.save(livraison); // ← Hibernate va réinstancier ici
     }
 
     public Livraison mettreAJourDates(Long id,
-                                       LocalDateTime dateCollecteEffective,
-                                       LocalDateTime dateLivraisonEffective) {
+            LocalDateTime dateCollecteEffective,
+            LocalDateTime dateLivraisonEffective) {
         Livraison livraison = livraisonRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Livraison introuvable"));
 

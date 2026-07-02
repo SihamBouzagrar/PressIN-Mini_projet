@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PressIN - Nos Services</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #7b2fa8;
+            --primary-light: #9049bd;
+            --accent: #c9a961;
+            --border: #e8eaf0;
+            --bg: #f4f5f7;
+            --text-dark: #2d1b4e;
+        }
+
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+        }
+
+        /* === NAVBAR === */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--primary);
+            padding: .875rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .logo {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .navbar nav a {
+            font-size: 13px;
+            color: rgba(255, 255, 255, .8);
+            text-decoration: none;
+            padding: 5px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, .2);
+            margin-left: 8px;
+            transition: all .2s;
+        }
+
+        .navbar nav a:hover {
+            background: rgba(255, 255, 255, .15);
+            color: white;
+        }
+
+        /* === HERO === */
+        .hero-services {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            padding: 5rem 2rem 3rem;
+            text-align: center;
+            color: white;
+            margin-top: 56px;
+        }
+
+        .hero-services h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: .75rem;
+        }
+
+        .hero-services p {
+            font-size: 14px;
+            opacity: .85;
+            max-width: 550px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* === MAIN === */
+        .main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* === SERVICES GRID === */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 14px;
+        }
+
+        .service-card {
+            background: white;
+            border: 0.5px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all .2s;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(123, 47, 168, .1);
+        }
+
+        .sc-icon {
+            font-size: 32px;
+            margin-bottom: .875rem;
+        }
+
+        .sc-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .sc-desc {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        .sc-badge {
+            display: inline-block;
+            margin-top: .875rem;
+            font-size: 11px;
+            padding: 3px 12px;
+            border-radius: 20px;
+            background: #f3e8fb;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* === INNOVATION === */
+        .inno-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .inno-card {
+            background: white;
+            border: 0.5px solid var(--border);
+            border-radius: 14px;
+            padding: 1.25rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            transition: all .2s;
+        }
+
+        .inno-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .inno-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: #f3e8fb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .inno-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .inno-desc {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        /* === CHIFFRES === */
+        .promise-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .promise-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 14px;
+            padding: 1.5rem;
+            color: white;
+            text-align: center;
+        }
+
+        .promise-num {
+            font-size: 30px;
+            font-weight: 700;
+            opacity: .95;
+            margin-bottom: 6px;
+        }
+
+        .promise-label {
+            font-size: 13px;
+            opacity: .8;
+        }
+
+        /* === FOOTER === */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 12px;
+            color: #aaa;
+            background: white;
+            border-top: 0.5px solid var(--border);
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .promise-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-services h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">🧺 PressIN</div>
+        <nav>
+            <a href="index.html">Accueil</a>
+            <a href="commande.html">Commandes</a>
+            <a href="profile.html">Profil</a>
+        </nav>
+    </header>
+
+    <div class="hero-services">
+        <h1>🧺 Une Solution Digitale pour le Pressing</h1>
+        <p>Nous remplaçons les méthodes traditionnelles opaques par un pressing moderne, transparent et efficace.</p>
+    </div>
+
+    <div class="main">
+
+        <div>
+            <div class="section-title">✨ Nos services principaux</div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="sc-icon">⚙️</div>
+                    <div class="sc-title">Optimisation Opérationnelle</div>
+                    <div class="sc-desc">Suivez le cycle complet de traitement — lavage, repassage, livraison — et gérez
+                        efficacement les plannings.</div>
+                    <span class="sc-badge">Gestion & Suivi</span>
+                </div>
+                <div class="service-card">
+                    <div class="sc-icon">👁️</div>
+                    <div class="sc-title">Transparence Totale</div>
+                    <div class="sc-desc">Suivi en temps réel de l'état des commandes et notifications automatisées pour
+                        une confiance renforcée.</div>
+                    <span class="sc-badge">Temps réel</span>
+                </div>
+                <div class="service-card">
+                    <div class="sc-icon">📄</div>
+                    <div class="sc-title">Services Professionnalisés</div>
+                    <div class="sc-desc">Génération de factures PDF claires </div>
+                    <span class="sc-badge">Facturation </span>
+                </div>
+                <div class="service-card">
+                    <div class="sc-icon">🫧</div>
+                    <div class="sc-title">Lavage & Nettoyage</div>
+                    <div class="sc-desc">Lavage standard, nettoyage à sec et détachage professionnel pour tous types de
+                        vêtements.</div>
+                    <span class="sc-badge">Traitement</span>
+                </div>
+                <div class="service-card">
+                    <div class="sc-icon">👔</div>
+                    <div class="sc-title">Repassage Expert</div>
+                    <div class="sc-desc">Repassage professionnel avec soin, pour chemises, costumes, robes et textiles
+                        délicats.</div>
+                    <span class="sc-badge">Finition</span>
+                </div>
+                <div class="service-card">
+                    <div class="sc-icon">🚚</div>
+                    <div class="sc-title">Livraison à Domicile</div>
+                    <div class="sc-desc">Réservation de créneaux et géolocalisation pour un suivi précis de votre
+                        livreur en temps réel.</div>
+                    <span class="sc-badge">Logistique</span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-title">🚀 Module Logistique & Innovation</div>
+            <div class="inno-grid">
+                <div class="inno-card">
+                    <div class="inno-icon">📍</div>
+                    <div>
+                        <div class="inno-title">Géolocalisation livreur</div>
+                        <div class="inno-desc">Suivez votre livreur en temps réel depuis la collecte jusqu'à la
+                            livraison.</div>
+                    </div>
+                </div>
+                <div class="inno-card">
+                    <div class="inno-icon">🤖</div>
+                    <div>
+                        <div class="inno-title">Intelligence Artificielle</div>
+                        <div class="inno-desc">
+                            Chatbot IA pour optimiser les flux et l’assistance utilisateur.
+                        </div>
+                    </div>
+                </div>
+                <div class="inno-card">
+                    <div class="inno-icon">🌿</div>
+                    <div>
+                        <div class="inno-title">Éco-score Durable</div>
+                        <div class="inno-desc">Valorisez vos pratiques durables grâce à notre système de notation
+                            environnementale.</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+       
+        </div>
+
+    </div>
+
+    <footer>PressIN — L'avenir du pressing est numérique</footer>
+
+</body>
+
+</html>

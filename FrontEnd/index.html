@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Pressing Intelligent et Numérique</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+
+<body>
+    <style>
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        /* Animation de fond avec bulles */
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: rise 15s infinite ease-in;
+        }
+
+        .bubble:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            animation-duration: 12s;
+            animation-delay: 0s;
+        }
+
+        .bubble:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            left: 25%;
+            animation-duration: 10s;
+            animation-delay: 2s;
+        }
+
+        .bubble:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            left: 40%;
+            animation-duration: 14s;
+            animation-delay: 1s;
+        }
+
+        .bubble:nth-child(4) {
+            width: 70px;
+            height: 70px;
+            left: 60%;
+            animation-duration: 11s;
+            animation-delay: 3s;
+        }
+
+        .bubble:nth-child(5) {
+            width: 90px;
+            height: 90px;
+            left: 75%;
+            animation-duration: 13s;
+            animation-delay: 0.5s;
+        }
+
+        .bubble:nth-child(6) {
+            width: 50px;
+            height: 50px;
+            left: 88%;
+            animation-duration: 9s;
+            animation-delay: 2.5s;
+        }
+
+        @keyframes rise {
+            0% {
+                bottom: -100px;
+                transform: translateX(0) scale(1);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                bottom: 110vh;
+                transform: translateX(100px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        body {
+            margin: 0;
+            padding-top: 70px;
+            /* hauteur navbar */
+            font-family: Arial, sans-serif;
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            padding: 15px 30px;
+            display: flex;
+            /*    justify-content: space-between;*/
+            align-items: center;
+
+            z-index: 9999;
+            /* 🔥 très important */
+
+            background: rgba(0, 0, 0, 0.35);
+            /* meilleur contraste */
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Logo */
+        .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+        }
+
+
+        .nav-links a {
+            margin-left: 20px;
+            padding: 8px 18px;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 20px;
+            background: #65037ba4;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: #cb20de59;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 20px;
+            }
+
+
+            .logo {
+                font-size: 1.1rem;
+               
+            }
+
+
+            .nav-links a {
+                margin-left: 10px;
+                padding: 6px 14px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Contenu du Hero */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            padding: 20px;
+            max-width: 900px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-15px);
+            }
+
+            60% {
+                transform: translateY(-7px);
+            }
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 300;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        /* Boutons CTA */
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.8s both;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: #f8f9fa;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+        }
+        
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: #f8f9fa;}
+
+        /* Badge de confiance */
+        .trust-badges {
+            margin-top: 50px;
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 1s both;
+        }
+
+        .badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-icon {
+            font-size: 2rem;
+        }
+
+        .badge-text {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Flèche de scroll */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(-50%, 0);
+            }
+
+            50% {
+                transform: translate(-50%, 15px);
+            }
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 30px;
+            height: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 25px;
+            position: relative;
+        }
+
+        .scroll-indicator span::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            margin-left: -3px;
+            background: white;
+            border-radius: 50%;
+            animation: scroll 2s infinite;
+        }
+
+        @keyframes scroll {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+        /* Bouton Login */
+.login-btn {
+    background: white;
+    color: #667eea !important;
+    font-weight: 700;
+    
+}
+
+.login-btn:hover {
+    background: #f1f1f1;
+}
+    </style>
+    <nav class="navbar">
+        <div class="nav-left"></div>
+
+        <div class="logo">🧺 PressIN</div>
+
+        <div class="nav-links">
+
+            <a href="login.html" > Connecter</a>
+    
+
+        </div>
+    </nav>
+    <div class="nav-right">
+<a href="login.html" class="login-btn">Login</a>
+</div>
+
+
+    <section class="hero-section">
+        <!-- Animation de fond avec bulles -->
+        <div class="hero-background">
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+        </div>
+        <!-- Contenu principal -->
+        <div class="hero-content">
+            <div class="hero-icon">🧺</div>
+
+            <h1 class="hero-title">PressIN</h1>
+
+            <p class="hero-subtitle">Votre pressing professionnel à portée de clic</p>
+
+            <p class="hero-description">
+                Service de nettoyage premium pour vos vêtements.
+                Collecte et livraison à domicile en 48h.
+                <br> Qualité garantie,
+                <br>satisfaction assurée.
+            </p>
+
+            <!-- Boutons CTA -->
+            <div class="cta-buttons">
+               
+                <a href="service.html" class="btn btn-secondary">
+                    ✨ Voir nos services
+                </a>
+            </div>
+
+            <!-- Badges de confiance -->
+            <div class="trust-badges">
+                <div class="badge">
+                    <div class="badge-icon">⚡</div>
+                    <div class="badge-text">Livraison rapide</div>
+                </div>
+                <div class="badge">
+                    <div class="badge-icon">🏆</div>
+                    <div class="badge-text">Qualité premium</div>
+                </div>
+                <div class="badge">
+                    <div class="badge-icon">💯</div>
+                    <div class="badge-text">Satisfaction garantie</div>
+                </div>
+            </div>
+        </div>
+      
+
+ 
+       <script src="js/auth.js"></script>
+      
+</body>
+</html>

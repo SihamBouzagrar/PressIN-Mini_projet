@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - PressIN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #7b2fa8;
+            --primary-light: #9049bd;
+            --accent: #c9a961;
+            --bg: #f5f6fa;
+            --white: #ffffff;
+            --border: #ebeaf2;
+            --text-dark: #2d1b4e;
+            --text-light: #777;
+            --shadow: 0 10px 30px rgba(123, 47, 168, .08);
+        }
+
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* =========================
+       NAVBAR
+    ========================= */
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .08);
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .navbar nav a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, .85);
+            margin-left: 12px;
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, .15);
+            transition: .3s;
+            font-size: 14px;
+        }
+
+        .navbar nav a:hover {
+            background: rgba(255, 255, 255, .12);
+            color: white;
+        }
+
+        /* =========================
+       HERO
+    ========================= */
+
+        .hero-profile {
+            margin-top: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            padding: 4rem 2rem 5rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-profile::before {
+            content: '';
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: rgba(255, 255, 255, .06);
+            border-radius: 50%;
+            top: -120px;
+            right: -100px;
+        }
+
+        .hero-profile::after {
+            content: '';
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: rgba(255, 255, 255, .04);
+            border-radius: 50%;
+            bottom: -100px;
+            left: -80px;
+        }
+
+        .hero-profile h1 {
+            font-size: 32px;
+            margin-bottom: .75rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-profile p {
+            opacity: .9;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* =========================
+       PROFILE CARD
+    ========================= */
+
+        .profile-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: -60px;
+            padding: 0 1rem 3rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .card {
+            background: var(--white);
+            width: 100%;
+            max-width: 520px;
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            animation: fadeIn .6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            margin: -90px auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 42px;
+            font-weight: 700;
+            border: 6px solid white;
+            box-shadow: 0 10px 25px rgba(123, 47, 168, .2);
+        }
+
+        .card h2 {
+            text-align: center;
+            margin-bottom: .4rem;
+            font-size: 28px;
+            color: var(--text-dark);
+        }
+
+        .card p {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        /* =========================
+       FORM
+    ========================= */
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: .45rem;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .card input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: #faf9fd;
+            font-size: 14px;
+            transition: .25s;
+            outline: none;
+        }
+
+        .card input:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(123, 47, 168, .08);
+        }
+
+        /* =========================
+       BUTTON
+    ========================= */
+
+        .card button {
+            width: 100%;
+            margin-top: 1rem;
+            padding: 15px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .card button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(123, 47, 168, .2);
+        }
+
+        /* =========================
+       ERROR
+    ========================= */
+
+        #error {
+            margin-top: 1rem;
+            text-align: center;
+            color: #e74c3c;
+            font-weight: 500;
+        }
+
+        /* =========================
+       FOOTER
+    ========================= */
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #999;
+            font-size: 13px;
+        }
+
+        /* =========================
+       RESPONSIVE
+    ========================= */
+
+        @media(max-width: 768px) {
+
+            .hero-profile h1 {
+                font-size: 24px;
+            }
+
+            .card {
+                padding: 2rem 1.5rem;
+            }
+
+            .profile-avatar {
+                width: 90px;
+                height: 90px;
+                font-size: 34px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="logo">🧺 PressIN</div>
+
+        <nav>
+            <a href="service.html">Services</a>
+
+            <a href="commande.html">Commandes</a>
+            <a href="profile.html">Profil</a>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero-profile">
+        <h1>👤 Mon Profil</h1>
+        <p>Gérez et modifiez vos informations personnelles</p>
+    </section>
+
+    <!-- PROFILE -->
+    <div class="profile-wrapper">
+
+        <div class="card">
+
+            
+
+            <h2>Mon Profil</h2>
+            <p>Modifiez vos informations personnelles</p>
+
+            <form id="profile-form">
+
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" id="firstname" placeholder="Prénom" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" id="lastname" placeholder="Nom" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="Email" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Date de naissance</label>
+                    <input type="date" id="birthDate">
+                </div>
+
+                <div class="form-group">
+                    <label>CIN</label>
+                    <input type="text" id="cin" placeholder="CIN">
+                </div>
+                <div class="form-group">
+                    <label>Adresse</label>
+                    <input type="text" id="adresse" placeholder="Adresse">
+                </div>
+                <div class="form-group">
+                    <label>Telephone</label>
+                    <input type="text" id="telephone" placeholder="Telephone">
+                </div>
+
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="passWord" placeholder="Mot de passe">
+                </div>
+
+                <button type="submit">
+                    Mettre à jour
+                </button>
+
+            </form>
+
+            <p id="error"></p>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        PressIN — Gestion intelligente de pressing ✨
+    </footer>
+
+    <script>
+        const userId = sessionStorage.getItem("pressin_user_id");
+        const role = sessionStorage.getItem("pressin_role");
+
+        if (!userId || !role) {
+            window.location.href = "login.html";
+        }
+
+        // autoriser seulement admin + client (pas livreur si tu veux)
+        if (role !== "ROLE_CLIENT" && role !== "ROLE_ADMIN") {
+            alert("Accès refusé");
+            window.location.href = "login.html";
+        } let originalUser = {};
+        if (role === "ROLE_ADMIN") {
+            document.body.classList.add("admin-theme");
+        }
+
+        if (role === "ROLE_CLIENT") {
+            document.getElementById("cin").readOnly = true;
+            document.getElementById("cin").style.background = "#f1f5f9";
+        }
+        async function loadProfile() {
+
+            try {
+                let url = "";
+
+                if (role === "ROLE_CLIENT" || role === "ROLE_ADMIN") {
+                    url = `http://localhost:8083/rest/user/${userId}`;
+                }
+                const res = await fetch(url);
+
+                if (!res.ok) {
+                    throw new Error("Erreur chargement profil");
+                }
+
+                const user = await res.json();
+
+                originalUser = user;
+
+                document.getElementById('firstname').value = user.firstname || '';
+                document.getElementById('lastname').value = user.lastname || '';
+                document.getElementById('email').value = user.email || '';
+                document.getElementById('birthDate').value = user.birthDate || '';
+                document.getElementById('telephone').value = user.telephone || '';
+                document.getElementById('cin').value = user.cin || '';
+
+            } catch (err) {
+                document.getElementById('error').textContent = err.message;
+            }
+        }
+        loadProfile();
+
+
+        // Avatar
+        const avatar = document.getElementById("avatar-letter");
+
+        if (avatar) {
+            const firstname = sessionStorage.getItem("pressin_name") || "A";
+            avatar.textContent = firstname.charAt(0).toUpperCase();
+        }
+
+        // Update profile
+        document.getElementById('profile-form')
+            .addEventListener('submit', async (e) => {
+
+                e.preventDefault();
+
+                const updatedUser = {};
+
+                const firstname = document.getElementById('firstname').value;
+                const lastname = document.getElementById('lastname').value;
+                const email = document.getElementById('email').value;
+                const birthDate = document.getElementById('birthDate').value;
+                 const telephone = document.getElementById('telephone').value;
+                const cin = document.getElementById('cin').value;
+                const password = document.getElementById('passWord').value.trim();
+
+                if (firstname !== originalUser.firstname) updatedUser.firstname = firstname;
+                if (lastname !== originalUser.lastname) updatedUser.lastname = lastname;
+                if (email !== originalUser.email) updatedUser.email = email;
+                if (birthDate !== "") {
+                    updatedUser.birthDate = birthDate;
+                }
+                 if (telephone !== "") {
+                    updatedUser.telephone = telephone;
+                }
+                if (cin !== originalUser.cin) updatedUser.cin = cin;
+
+                if (password !== "") {
+                    updatedUser.passWord = password;
+                }
+
+                if (Object.keys(updatedUser).length === 0) {
+                    alert("Aucune modification détectée");
+                    return;
+                }
+
+                try {
+
+                    const response = await fetch(`http://localhost:8083/rest/user/update/${userId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(updatedUser)
+                        }
+                    );
+
+                    if (!response.ok) {
+                        const err = await response.text();
+                        document.getElementById('error').textContent = err;
+                        return;
+                    }
+
+                    const newUser = await response.json();
+
+                    sessionStorage.setItem("pressin_name", newUser.firstname);
+                    sessionStorage.setItem("pressin_email", newUser.email);
+
+                    originalUser = newUser;
+
+                    alert("✅ Profil mis à jour avec succès !");
+
+                } catch (err) {
+                    document.getElementById('error').textContent = err.message;
+                }
+            });
+
+    </script>
+
+</body>
+
+</html>

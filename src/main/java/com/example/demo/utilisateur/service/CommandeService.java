@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 
 @Service
 @RequiredArgsConstructor
@@ -57,5 +59,13 @@ public List<Commande> findByLivreurId(Long livreurId) {
 
 public List<Commande> findByStatut(Commande.StatutCommande statut) {
     return commandeRepository.findByStatut(statut);
+}
+public Commande updateStatut(Long id, Commande.StatutCommande statut) {
+    Commande commande = commandeRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Commande non trouvée avec l'id : " + id));
+
+    commande.setStatut(statut);
+
+    return commandeRepository.save(commande);
 }
 }

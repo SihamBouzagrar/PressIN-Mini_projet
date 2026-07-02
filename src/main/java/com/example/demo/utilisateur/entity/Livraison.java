@@ -3,13 +3,18 @@ package com.example.demo.utilisateur.entity;
 import java.time.LocalDateTime;
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "livraisons")
 @Data
+@NoArgsConstructor      
+@AllArgsConstructor 
 @Builder
 
 public class Livraison {

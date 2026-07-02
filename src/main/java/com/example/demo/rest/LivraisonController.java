@@ -48,18 +48,19 @@ public class LivraisonController {
     public ResponseEntity<?> changerStatut(
             @PathVariable Long id,
             @RequestParam String statut) {
-        return ResponseEntity.ok(livraisonService.changerStatut(
-                id, Livraison.StatutLivraison.valueOf(statut.toUpperCase())));
+        Livraison livraison = livraisonService.changerStatut(
+                id, Livraison.StatutLivraison.valueOf(statut.toUpperCase()));
+
+        return ResponseEntity.ok(LivraisonDTO.from(livraison));
     }
 
-    // LIVREUR — mettre à jour position GPS
     @PutMapping("/dates/{id}")
     public ResponseEntity<?> mettreAJourDates(
             @PathVariable Long id,
             @RequestParam(required = false) LocalDateTime dateCollecte,
             @RequestParam(required = false) LocalDateTime dateLivraison) {
-        return ResponseEntity.ok(
-                livraisonService.mettreAJourDates(id, dateCollecte, dateLivraison));
+        Livraison livraison = livraisonService.mettreAJourDates(id, dateCollecte, dateLivraison);
+        return ResponseEntity.ok(LivraisonDTO.from(livraison));
     }
 
     // LIVREUR — ses livraisons

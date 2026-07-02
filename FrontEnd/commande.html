@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Commandes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #7b2fa8;
+            --primary-light: #9049bd;
+            --accent: #c9a961;
+            --accent-light: #e2c98b;
+            --bg: #f5f6fa;
+            --white: #ffffff;
+            --border: #ebeaf2;
+            --text-dark: #2d1b4e;
+            --text-light: #777;
+            --success: #38b764;
+            --danger: #e74c3c;
+            --shadow: 0 8px 30px rgba(123, 47, 168, .08);
+        }
+
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* =========================
+       NAVBAR
+    ========================= */
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .08);
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .navbar nav a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, .85);
+            margin-left: 12px;
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, .15);
+            transition: .3s;
+            font-size: 14px;
+        }
+
+        .navbar nav a:hover {
+            background: rgba(255, 255, 255, .12);
+            color: white;
+        }
+
+        /* =========================
+       HERO
+    ========================= */
+
+        .hero {
+            margin-top: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem 3rem;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            margin-bottom: .75rem;
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: auto;
+            opacity: .9;
+            line-height: 1.7;
+        }
+
+        /* =========================
+       CONTAINER
+    ========================= */
+
+        .container {
+            max-width: 1300px;
+            margin: -40px auto 40px;
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 5;
+        }
+
+        /* =========================
+       TOOLBAR
+    ========================= */
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        #count-label {
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        #logout-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: .8rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: .3s;
+        }
+
+        #logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(123, 47, 168, .2);
+        }
+
+        /* =========================
+       TABLE
+    ========================= */
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1100px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+
+        th {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 1rem;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            color: #444;
+        }
+
+        tbody tr {
+            transition: .2s;
+        }
+
+        tbody tr:hover {
+            background: #faf8fd;
+        }
+
+        /* =========================
+       BUTTONS
+    ========================= */
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: .55rem .9rem;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .25s;
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, #38b764, #4fd17d);
+            color: white;
+        }
+
+        .edit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #e74c3c, #ff6b5c);
+            color: white;
+        }
+
+        .delete-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .assign-btn {
+            background: linear-gradient(135deg, #2196f3, #5cb3f7);
+            color: white;
+        }
+
+        .assign-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .actions-cell {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        /* =========================
+       BADGES
+    ========================= */
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .badge-RECUE {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .badge-EN_LAVAGE {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .badge-EN_REPASSAGE {
+            background: #fce4ec;
+            color: #ad1457;
+        }
+
+        .badge-EN_LIVRAISON {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-PRETE {
+            background: #ede7f6;
+            color: #5e35b1;
+        }
+
+        .badge-LIVREE {
+            background: #e8f5e9;
+            color: #1b5e20;
+        }
+
+        .badge-ANNULEE {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* =========================
+       MESSAGES
+    ========================= */
+
+        #error,
+        #success {
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        #error {
+            color: var(--danger);
+        }
+
+        #success {
+            color: var(--success);
+        }
+
+        /* =========================
+       MODAL
+    ========================= */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(45, 27, 78, .45);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 18px;
+            padding: 1.75rem;
+            width: 90%;
+            max-width: 380px;
+            box-shadow: var(--shadow);
+        }
+
+        .modal h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1.25rem;
+        }
+
+        .modal select {
+            width: 100%;
+            padding: .7rem .9rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            margin-bottom: 1.25rem;
+            color: var(--text-dark);
+        }
+
+        .modal-btns {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-cancel {
+            padding: .6rem 1.1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: transparent;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .btn-save {
+            padding: .6rem 1.1rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* =========================
+       FOOTER
+    ========================= */
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #999;
+            font-size: 13px;
+        }
+
+        /* =========================
+       RESPONSIVE
+    ========================= */
+
+        @media(max-width: 768px) {
+
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                margin: -20px 1rem 2rem;
+                padding: 1rem;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #logout-btn {
+                width: 100%;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">🧺 PressIN</div>
+
+        <nav>
+            <a href="dashbord.html">Dashboard</a>
+            <a href="commande.html">Commandes</a>
+            <a href="profile.html">Profil</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>📦 Gestion des Commandes</h1>
+        <p>
+            Consultez, modifiez et suivez toutes les commandes du pressing
+            depuis une interface moderne et intuitive.
+        </p>
+    </section>
+
+    <div class="container">
+        <h1>Liste des Commandes</h1>
+
+        <div class="toolbar">
+            <span id="count-label" style="color:#555; font-size:14px;"></span>
+            <button id="logout-btn" style="background:#667eea;" onclick="logout()">Se déconnecter</button>
+        </div>
+        <div class="table-wrapper">
+            <table id="commandes-table">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>N° Commande</th>
+                        <th>Date création</th>
+                        <th>Collecte souhaitée</th>
+                        <th>Livraison souhaitée</th>
+                        <th>Statut</th>
+                        <th>Type livraison</th>
+                        <th>Montant total</th>
+                        <th>Client</th>
+                        <th> Articles</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <p id="error"></p>
+        <p id="success"></p>
+    </div>
+
+
+<button id="btn-statut" style="display:none">Statut</button>
+<button id="btn-assigner" style="display:none">Assigner</button>
+<button id="btn-livree" style="display:none">Livrer</button>
+<button id="btn-annuler" style="display:none">Annuler</button>
+
+<div class="modal-overlay" id="modal-livreur">
+    <div class="modal">
+        <h3>🚚 Assigner un livreur</h3>
+        <select id="select-livreur">
+            <option value="">Chargement...</option>
+        </select>
+        <div class="modal-btns">
+            <button class="btn-cancel" onclick="closeModalLivreur()">Annuler</button>
+            <button class="btn-save" onclick="confirmerAssignationLivreur()">Assigner</button>
+        </div>
+    </div>
+</div>
+
+    <script>
+       const BASE = "http://localhost:8083/rest/commandes";
+       const API_ROOT = "http://localhost:8083/rest";
+
+function formatDate(d) {
+    if (!d) return "-";
+    return new Date(d).toLocaleDateString("fr-FR");
+}
+
+// ================================
+// INIT
+// ================================
+window.addEventListener("DOMContentLoaded", () => {
+
+    const role = sessionStorage.getItem("pressin_role");
+    const clientId = sessionStorage.getItem("pressin_user_id");
+
+    if (!role || !clientId) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    loadCommandes(role, clientId);
+});
+
+// ================================
+// LOAD COMMANDES
+// ================================
+async function loadCommandes(role, clientId) {
+
+    const errorElem = document.getElementById('error');
+    const successElem = document.getElementById('success');
+    const countLabel = document.getElementById('count-label');
+
+    errorElem.textContent = "";
+    successElem.textContent = "";
+
+    try {
+
+        let url = "";
+
+        // CLIENT → seulement ses commandes
+        if (role === "ROLE_CLIENT") {
+            url = `${BASE}/client/${clientId}`;
+        }
+
+        // ADMIN → toutes les commandes
+        else if (role === "ROLE_ADMIN") {
+            url = `${BASE}/all`;
+        }
+console.log("role:", JSON.stringify(role));
+console.log("url:", url);
+        const response = await fetch(url);
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const commandes = await response.json();
+
+        const tbody = document.querySelector("#commandes-table tbody");
+        tbody.innerHTML = "";
+
+        countLabel.textContent = `${commandes.length} commande(s) trouvée(s)`;
+
+        if (commandes.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:#999;">Aucune commande</td></tr>`;
+            return;
+        }
+
+        for (const cmd of commandes) {
+
+    const clientNom = cmd.client
+        ? (cmd.client.nom || cmd.client.prenom || cmd.client.email || cmd.client.id)
+        : "-";
+
+    const montant = cmd.montantFinal ?? cmd.montantTotal ?? 0;
+
+    let articlesText = "-";
+
+    try {
+        const resArticles = await fetch(`http://localhost:8083/rest/articles/commande/${cmd.id}`);
+        const articles = await resArticles.json();
+
+        if (articles.length > 0) {
+            articlesText = articles.map(a => a.nom).join(", ");
+        }
+    } catch (e) {
+        console.error("Erreur articles", e);
+    }
+
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+        <td>${cmd.id ?? "-"}</td>
+        <td>${cmd.numeroCommande ?? "-"}</td>
+        <td>${formatDate(cmd.dateCreation)}</td>
+        <td>${formatDate(cmd.dateCollecteSouhaitee)}</td>
+        <td>${formatDate(cmd.dateLivraisonSouhaitee)}</td>
+        <td>${cmd.statut ?? "-"}</td>
+        <td>${cmd.typeLivraison ?? "-"}</td>
+        <td>${montant.toFixed(2)} MAD</td>
+        <td>${clientNom}</td>
+        <td>${articlesText}</td>
+
+        <td>
+            <div class="actions-cell">
+            ${role === "ROLE_ADMIN" ? `
+                <button class="edit-btn" onclick="editCommande(${cmd.id})">Modifier statut</button>
+                <button class="assign-btn" onclick="ouvrirModalLivreur(${cmd.id})">Assigner livreur</button>
+            ` : ""}
+
+            ${role === "ROLE_CLIENT" ? `
+                <button class="delete-btn" onclick="deleteCommande(${cmd.id})">Annuler</button>
+            ` : ""}
+            </div>
+        </td>
+    `;
+
+    tbody.appendChild(tr);
+}
+
+            
+    } catch (err) {
+        console.error(err);
+        errorElem.textContent = "Erreur chargement commandes : " + err.message;
+    }
+}
+function editCommande(id) {
+    const role = sessionStorage.getItem("pressin_role");
+
+    if (role !== "ROLE_ADMIN") {
+        alert("Accès refusé");
+        return;
+    }
+
+    const statuts = [
+        "RECUE", "EN_LAVAGE", "EN_REPASSAGE",
+        "EN_LIVRAISON", "PRETE", "LIVREE", "ANNULEE"
+    ];
+
+    const newStatut = prompt("Nouveau statut :\n" + statuts.join(", "));
+    if (!newStatut) return;
+
+    const statut = newStatut.toUpperCase();
+    if (!statuts.includes(statut)) {
+        alert("Statut invalide");
+        return;
+    }
+
+    console.log("Envoi PUT vers :", `${BASE}/update/${id}`);
+
+    fetch(`${BASE}/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ statut: statut })
+    })
+    .then(async res => {
+        console.log("Statut HTTP reçu :", res.status);
+        const text = await res.text();
+        console.log("Corps brut de la réponse :", text);
+
+        if (!res.ok) throw new Error("Erreur update statut : " + text);
+
+        return JSON.parse(text);
+    })
+    .then(() => {
+        loadCommandes(
+            sessionStorage.getItem("pressin_role"),
+            sessionStorage.getItem("pressin_user_id")
+        );
+    })
+    .catch(err => console.error("Erreur capturée :", err));
+}
+
+// ================================
+// ASSIGNER LIVREUR
+// ================================
+let selectedCommandeIdLivreur = null;
+
+async function ouvrirModalLivreur(commandeId) {
+    const role = sessionStorage.getItem("pressin_role");
+
+    if (role !== "ROLE_ADMIN") {
+        alert("Accès refusé");
+        return;
+    }
+
+    selectedCommandeIdLivreur = commandeId;
+    const selectEl = document.getElementById("select-livreur");
+    selectEl.innerHTML = `<option value="">Chargement...</option>`;
+    document.getElementById("modal-livreur").style.display = "flex";
+
+    try {
+        const res = await fetch(`${API_ROOT}/user/admin/livreurs`);
+        if (!res.ok) throw new Error("Erreur chargement livreurs");
+
+        const livreurs = await res.json();
+
+        if (!livreurs || livreurs.length === 0) {
+            selectEl.innerHTML = `<option value="">Aucun livreur disponible</option>`;
+            return;
+        }
+
+        selectEl.innerHTML = livreurs.map(l =>
+            `<option value="${l.id}">${l.firstname} ${l.lastname}</option>`
+        ).join("");
+
+    } catch (err) {
+        console.error(err);
+        selectEl.innerHTML = `<option value="">Erreur de chargement</option>`;
+    }
+}
+
+function closeModalLivreur() {
+    document.getElementById("modal-livreur").style.display = "none";
+    selectedCommandeIdLivreur = null;
+}
+
+async function confirmerAssignationLivreur() {
+    const livreurId = document.getElementById("select-livreur").value;
+
+    if (!livreurId) {
+        alert("Veuillez sélectionner un livreur");
+        return;
+    }
+
+    try {
+        const res = await fetch(
+            `${API_ROOT}/livraisons/create/${selectedCommandeIdLivreur}/${livreurId}`,
+            { method: "POST" }
+        );
+
+        if (!res.ok) {
+            const text = await res.text();
+            throw new Error("Erreur assignation livreur : " + text);
+        }
+
+        alert("✅ Livreur assigné avec succès !");
+        closeModalLivreur();
+
+        loadCommandes(
+            sessionStorage.getItem("pressin_role"),
+            sessionStorage.getItem("pressin_user_id")
+        );
+
+    } catch (err) {
+        console.error(err);
+        alert("❌ Erreur lors de l'assignation du livreur");
+    }
+}
+
+function deleteCommande(id) {
+
+    const role = sessionStorage.getItem("pressin_role");
+
+    if (role === "ROLE_ADMIN") {
+        alert("Admin ne supprime pas ici");
+        return;
+    }
+
+    if (!confirm("Annuler cette commande ?")) return;
+
+    fetch(`${BASE}/delete/${id}`, { method: "DELETE" })
+        .then(res => {
+            if (!res.ok) throw new Error("Erreur");
+            loadCommandes(role, sessionStorage.getItem("pressin_user_id"));
+        })
+        .catch(err => console.error(err));
+}
+function logout() {
+    if (confirm("Confirmer la déconnexion ?")) {
+
+        sessionStorage.clear(); // propre (plus adapté que localStorage ici)
+
+        window.location.href = "login.html";
+    }
+}
+    </script>
+</body>
+
+</html>

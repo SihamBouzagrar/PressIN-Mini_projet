@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Utilisateurs - PressIN</title>
+    <link rel="icon" href="data:,">
+    <style>
+        :root {
+            --primary: #7b2fa8;
+            --primary-light: #9049bd;
+            --border: #e8eaf0;
+            --bg: #f4f5f7;
+            --text-dark: #2d1b4e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", sans-serif; }
+
+        .sidebar {
+            position: fixed; top: 0; left: 0; width: 260px; height: 100vh;
+            background: #7b2fa8; color: white; display: flex; flex-direction: column;
+        }
+
+        .sidebar-logo {
+            padding: 1.25rem 1rem; font-size: 15px; font-weight: 600;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .nav-item {
+            display: flex; align-items: center; gap: 10px;
+            color: rgba(255,255,255,.7); text-decoration: none;
+            padding: .6rem 1rem; font-size: 13px;
+            border-left: 2px solid transparent; transition: all .2s;
+        }
+
+        .nav-item:hover { background: rgba(255,255,255,.08); color: white; }
+        .nav-item.active { background: rgba(201,169,97,.2); color: #e0c687; border-left-color: #c9a961; }
+
+        .main { margin-left: 260px; min-height: 100vh; background: var(--bg); padding: 1.5rem; }
+
+        h1 { font-size: 19px; color: var(--text-dark); margin-bottom: 1rem; }
+
+        .tabs { display: flex; gap: 8px; margin-bottom: 1rem; }
+
+        .tab-btn {
+            padding: .5rem 1rem; border-radius: 20px; border: 1px solid var(--border);
+            background: white; cursor: pointer; font-size: 13px; color: #666;
+        }
+
+        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .table-wrapper { background: white; border-radius: 14px; border: 0.5px solid var(--border); overflow: hidden; }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        thead { background: linear-gradient(135deg, var(--primary), var(--primary-light)); }
+
+        th { color: white; padding: .875rem 1rem; text-align: left; font-size: 13px; }
+
+        td { padding: .875rem 1rem; border-bottom: 1px solid var(--border); font-size: 13px; color: #444; }
+
+        .role-badge {
+            padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+        }
+
+        .role-ROLE_CLIENT { background: #e3f2fd; color: #1565c0; }
+        .role-ROLE_ADMIN { background: #fce4ec; color: #ad1457; }
+        .role-ROLE_LIVREUR { background: #e8f5e9; color: #2e7d32; }
+
+        .delete-btn {
+            border: none; background: #fdecea; color: #c0392b;
+            padding: .4rem .8rem; border-radius: 8px; cursor: pointer; font-size: 12px;
+        }
+
+        .delete-btn:hover { background: #c0392b; color: white; }
+
+        #count-label { color: #888; font-size: 13px; margin-bottom: .75rem; display: block; }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-logo">🧺 PressIN <span style="font-size:10px;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:20px;">ADMIN</span></div>
+        <a class="nav-item" href="dashbord.html">📊 Dashbord</a>
+        <a class="nav-item" href="commande.html">📦 Commandes</a>
+        <a class="nav-item active" href="utilisateurs.html">👥 Utilisateurs</a>
+        <a class="nav-item" href="service.html">✨ Services</a>
+        <a class="nav-item" href="livreurs.html">🚚 Gestion Livreurs</a>
+        <a class="nav-item" href="profile.html">👤 Profil</a>
+    </aside>
+
+    <div class="main">
+        <h1>Liste des utilisateurs</h1>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-role="all" onclick="filterRole('all')">Tous</button>
+            <button class="tab-btn" data-role="ROLE_CLIENT" onclick="filterRole('ROLE_CLIENT')">Clients</button>
+            <button class="tab-btn" data-role="ROLE_LIVREUR" onclick="filterRole('ROLE_LIVREUR')">Livreurs</button>
+            <button class="tab-btn" data-role="ROLE_ADMIN" onclick="filterRole('ROLE_ADMIN')">Admins</button>
+        </div>
+
+        <span id="count-label"></span>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Nom</th><th>Email</th><th>Téléphone</th><th>Rôle</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="users-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8083/rest';
+        const role = sessionStorage.getItem("pressin_role");
+
+        if (!role || role !== "ROLE_ADMIN") {
+            window.location.href = "login.html";
+        }
+
+        let allUsers = [];
+
+        async function loadUsers() {
+            try {
+                const [clients, livreurs, admins] = await Promise.all([
+                    fetch(`${API_BASE_URL}/user/clients`).then(r => r.json()),
+                    fetch(`${API_BASE_URL}/user/livreurs`).then(r => r.json()),
+                    fetch(`${API_BASE_URL}/user/admins`).then(r => r.json())
+                ]);
+
+                allUsers = [...clients, ...livreurs, ...admins];
+                renderUsers(allUsers);
+            } catch (err) {
+                console.error("Erreur chargement utilisateurs:", err);
+                document.getElementById('users-tbody').innerHTML =
+                    `<tr><td colspan="6" style="text-align:center;color:#c0392b;">Erreur de chargement</td></tr>`;
+            }
+        }
+
+        function renderUsers(users) {
+            const tbody = document.getElementById('users-tbody');
+            const countLabel = document.getElementById('count-label');
+
+            countLabel.textContent = `${users.length} utilisateur(s)`;
+
+            if (users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#999;">Aucun utilisateur</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = users.map(u => `
+                <tr>
+                    <td>${u.id}</td>
+                    <td>${u.firstname || ''} ${u.lastname || ''}</td>
+                    <td>${u.email || '-'}</td>
+                    <td>${u.telephone || '-'}</td>
+                    <td><span class="role-badge role-${u.role}">${u.role.replace('ROLE_', '')}</span></td>
+                    <td><button class="delete-btn" onclick="deleteUser(${u.id})">Supprimer</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function filterRole(roleFilter) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.tab-btn[data-role="${roleFilter}"]`).classList.add('active');
+
+            if (roleFilter === 'all') {
+                renderUsers(allUsers);
+            } else {
+                renderUsers(allUsers.filter(u => u.role === roleFilter));
+            }
+        }
+
+        async function deleteUser(id) {
+            if (!confirm("Supprimer cet utilisateur ?")) return;
+            try {
+                const res = await fetch(`${API_BASE_URL}/user/${id}`, { method: "DELETE" });
+                if (!res.ok) throw new Error("Erreur suppression");
+                loadUsers();
+            } catch (err) {
+                alert("Erreur lors de la suppression");
+                console.error(err);
+            }
+        }
+
+        loadUsers();
+    </script>
+</body>
+
+</html>

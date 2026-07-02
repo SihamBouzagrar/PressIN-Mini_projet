@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Espace Client</title>
+    <link rel="icon" href="data:,">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Roboto, sans-serif;
+        }
+
+        :root {
+            --violet: #667eea;
+            --purple: #764ba2;
+            --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card: rgba(255, 255, 255, 0.13);
+            --card-solid: rgba(255, 255, 255, 0.95);
+            --border: rgba(255, 255, 255, 0.22);
+            --text: white;
+            --muted: rgba(255, 255, 255, 0.65);
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+        /* Bubbles */
+        .bubbles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 50%;
+            animation: rise linear infinite;
+        }
+
+        .bubble:nth-child(1) {
+            width: 70px;
+            height: 70px;
+            left: 8%;
+            animation-duration: 13s;
+        }
+
+        .bubble:nth-child(2) {
+            width: 45px;
+            height: 45px;
+            left: 22%;
+            animation-duration: 10s;
+            animation-delay: 2s;
+        }
+
+        .bubble:nth-child(3) {
+            width: 90px;
+            height: 90px;
+            left: 38%;
+            animation-duration: 15s;
+            animation-delay: 1s;
+        }
+
+        .bubble:nth-child(4) {
+            width: 60px;
+            height: 60px;
+            left: 58%;
+            animation-duration: 11s;
+            animation-delay: 3s;
+        }
+
+        .bubble:nth-child(5) {
+            width: 80px;
+            height: 80px;
+            left: 74%;
+            animation-duration: 14s;
+            animation-delay: .5s;
+        }
+
+        @keyframes rise {
+            0% {
+                bottom: -100px;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                bottom: 110vh;
+                transform: translateX(60px) scale(.5);
+                opacity: 0;
+            }
+        }
+
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(16px);
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--border);
+            padding: 0 36px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+        }
+
+        .nav-tab {
+            padding: 8px 18px;
+            border-radius: 20px;
+            color: var(--muted);
+            font-size: 0.88rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .nav-tab:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: var(--violet);
+            font-weight: 700;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.85rem;
+        }
+
+        .logout-link {
+            color: var(--muted);
+            font-size: 0.82rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .logout-link:hover {
+            color: white;
+        }
+
+        /* Content wrapper */
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 36px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Page sections */
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* Welcome banner */
+        .welcome-banner {
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 36px 40px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .welcome-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .welcome-sub {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .btn-commande {
+            padding: 14px 28px;
+            background: white;
+            color: var(--violet);
+            border: none;
+            border-radius: 14px;
+            font-family: 'Syne', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-commande:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .mini-stat {
+            background: var(--card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px 22px;
+            text-align: center;
+        }
+
+        .mini-stat-icon {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+
+        .mini-stat-val {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .mini-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* Cards grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .service-card {
+            background: var(--card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 28px 24px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .service-icon {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+        }
+
+        .service-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .service-desc {
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        .service-price {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .btn-order {
+            padding: 10px 22px;
+            background: white;
+            color: var(--violet);
+            border: none;
+            border-radius: 10px;
+            font-family: 'Syne', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-order:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Orders list */
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .order-card {
+            background: var(--card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .order-ref {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .order-detail {
+            font-size: 0.83rem;
+            color: var(--muted);
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .status.en-cours {
+            background: rgba(255, 190, 50, 0.2);
+            color: #ffdb80;
+        }
+
+        .status.termine {
+            background: rgba(80, 200, 120, 0.2);
+            color: #80e0a0;
+        }
+
+        .status.collecte {
+            background: rgba(100, 150, 240, 0.2);
+            color: #a0bcf8;
+        }
+
+        .status.livre {
+            background: rgba(80, 200, 120, 0.2);
+            color: #80e0a0;
+        }
+
+        .order-price {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        /* Tracking steps */
+        .tracking-card {
+            background: var(--card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+
+        .track-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .steps {
+            display: flex;
+            gap: 0;
+            align-items: center;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step.done::after {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step.done .step-dot {
+            background: white;
+            border-color: white;
+        }
+
+        .step.current .step-dot {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: white;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.15);
+        }
+
+        .step-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .step.done .step-label,
+        .step.current .step-label {
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Profile */
+        .profile-card {
+            background: var(--card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px;
+            max-width: 500px;
+        }
+
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: white;
+            color: var(--violet);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .profile-field {
+            margin-bottom: 18px;
+        }
+
+        .field-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .field-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+
+            .welcome-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .stats-row {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                gap: 2px;
+            }
+
+            .nav-tab {
+                padding: 6px 10px;
+                font-size: 0.78rem;
+            }
+        }
+
+        /* 
+   CHATBOT*/
+#chatbot-toggle {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, .4);
+    z-index: 9999;
+    transition: transform .2s;
+}
+
+#chatbot-toggle:hover {
+    transform: scale(1.08);
+}
+
+#chatbot-sidebar {
+    position: fixed;
+    top: 0;
+    right: -420px;
+    width: 400px;
+    height: 100vh;
+    background: #ffffff;
+    box-shadow: -5px 0 25px rgba(0, 0, 0, .15);
+    transition: right .35s ease;
+    display: flex;
+    flex-direction: column;
+    z-index: 9999;
+}
+
+#chatbot-sidebar.open {
+    right: 0;
+}
+
+.chat-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 18px 20px;
+    font-size: 17px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.chat-header span {
+    cursor: pointer;
+    opacity: .85;
+    transition: opacity .2s;
+}
+
+.chat-header span:hover {
+    opacity: 1;
+}
+
+#chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px;
+    background: #f5f6fb;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-message {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 11px 16px;
+    border-radius: 16px 16px 4px 16px;
+    margin-bottom: 12px;
+    max-width: 78%;
+    margin-left: auto;
+    font-size: .9rem;
+    line-height: 1.45;
+    box-shadow: 0 3px 10px rgba(102, 126, 234, .25);
+}
+
+.bot-message {
+    background: white;
+    color: #2d1b4e;
+    padding: 11px 16px;
+    border-radius: 16px 16px 16px 4px;
+    margin-bottom: 12px;
+    max-width: 78%;
+    font-size: .9rem;
+    line-height: 1.45;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .07);
+    border: 1px solid #ebeaf2;
+}
+
+.bot-message.error {
+    background: #fdecea;
+    color: #c0392b;
+    border-color: #f5c6c0;
+}
+
+.chat-input {
+    display: flex;
+    padding: 14px;
+    border-top: 1px solid #ebeaf2;
+    background: white;
+    flex-shrink: 0;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 11px 14px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: .88rem;
+    outline: none;
+    transition: border-color .2s;
+}
+
+.chat-input input:focus {
+    border-color: #764ba2;
+}
+
+.chat-input button {
+    margin-left: 10px;
+    border: none;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    width: 46px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: transform .15s;
+}
+
+.chat-input button:hover {
+    transform: scale(1.05);
+}
+.bot-message {
+    background: white;
+    color: #2d1b4e;
+    padding: 11px 16px;
+    border-radius: 16px 16px 16px 4px;
+    margin-bottom: 12px;
+    max-width: 78%;
+    font-size: .9rem;
+    line-height: 1.45;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .07);
+    border: 1px solid #ebeaf2;
+    white-space: pre-line;   /* ← ajoute cette ligne */
+}
+    </style>
+</head>
+
+<body>
+
+    <div class="bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-logo">🧺 PressIN</div>
+
+
+        <div class="menu">
+            <a href="service.html">✨ Services</a>
+
+            
+                <a href="profile.html">👤 Profil</a>
+        </div>
+
+        <div class="nav-right">
+            <div class="user-chip">👤 <span id="client-name">Client</span></div>
+            <a class="logout-link" onclick="logout()">Déconnexion</a>
+        </div>
+    </nav>
+
+    <div class="content">
+
+        <!-- ── Accueil ── -->
+        <div class="page active" id="page-accueil">
+            <div class="welcome-banner">
+                <div>
+                    <div id="welcome"></div>
+                    <div class="welcome-sub">Vos vêtements méritent le meilleur soin. Collecte & livraison en 48h.</div>
+                </div>
+                <a href="new-order.html" class="btn-commande">
+                    📦 Passer une commande
+                </a>
+            </div>
+
+            <!-- ── Services ── -->
+            <div class="page" id="page-services">
+                <h2 style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:24px;">Nos
+                    services
+                </h2>
+                <div class="services-grid">
+
+                </div>
+            </div>
+
+            <!-- ── Mes commandes ── -->
+            <div class="page" id="page-commandes">
+                <h2 style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:24px;">Mes
+                    commandes
+                </h2>
+                <div class="orders-list">
+                    <div class="order-card">
+
+                        <div class="order-card">
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ── Suivi ── -->
+                <div class="page" id="page-suivi">
+                    <h2 style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:24px;">Suivi
+                        en
+                        temps réel</h2>
+
+
+
+                </div>
+
+            </div>
+
+            <!-- ── Profil ── -->
+            <div class="page" id="page-profil">
+                <h2 style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:24px;">Mon
+                    profil
+                </h2>
+                <div class="profile-card">
+                    <div class="profile-avatar" id="avatar-initials">S</div>
+
+                </div>
+            </div>
+
+        </div><!-- /content -->
+
+        <script>
+            const role = sessionStorage.getItem("pressin_role");
+            // ===============================
+            // 🔐 PROTECTION PAGE CLIENT
+            // ===============================
+            if (!role) {
+                window.location.href = "login.html";
+            }
+            else if (role.toUpperCase() !== "ROLE_CLIENT") {
+                window.location.href = "login.html";
+            }
+
+            // ===============================
+            // 👤 AFFICHAGE UTILISATEUR
+            // ===============================
+            const name = sessionStorage.getItem("pressin_name");
+            const clientId = sessionStorage.getItem("pressin_user_id");
+
+            const welcomeEl = document.getElementById("welcome");
+
+            if (welcomeEl) {
+                welcomeEl.textContent =
+                    "Bonjour " + (name || "Utilisateur")
+
+            }
+
+            // ===============================
+            // 📦 CHARGER COMMANDES
+            // ===============================
+            async function loadCommandes() {
+                try {
+                    const res = await fetch(`http://localhost:8083/rest/commandes/client/${clientId}`);
+                    const data = await res.json();
+
+                    console.log("Commandes:", data);
+                    // 👉 ici tu peux afficher dans un tableau
+                } catch (e) {
+                    console.error("Erreur chargement commandes", e);
+                }
+            }
+
+            loadCommandes();
+
+            // ===============================
+            // ➕ CREER COMMANDE (APPELEE PAR BOUTON)
+            // ===============================
+            async function createCommande() {
+                try {
+                    const res = await fetch(`http://localhost:8083/rest/commandes/create/${clientId}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            dateCollecteSouhaitee: null,
+                            dateLivraisonSouhaitee: null,
+                            typeLivraison: "EN_MAGASIN",
+                            montantRemise: 0
+                        })
+                    });
+
+                    if (!res.ok) {
+                        alert("Erreur création commande");
+                        return;
+                    }
+
+                    alert("Commande créée !");
+                    loadCommandes(); // refresh
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
+            // ===============================
+            // 🚪 LOGOUT
+            // ===============================
+            function logout() {
+                if (confirm("Confirmer la déconnexion ?")) {
+                    sessionStorage.clear();
+                    window.location.href = "login.html";
+                }
+            }
+document.addEventListener("DOMContentLoaded", () => {
+
+    const sidebar = document.getElementById("chatbot-sidebar");
+    const input = document.getElementById("chat-input");
+    const chat = document.getElementById("chat-messages");
+
+    const CLIENT_KEY = "pressin_user_id";
+
+  function getClientId() {
+    return sessionStorage.getItem("pressin_user_id");
+}
+    window.toggleChatbot = function () {
+        sidebar.classList.toggle("open");
+    };
+
+    window.sendMessage = async function () {
+
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        const clientId = getClientId();
+        if (!clientId) {
+            chat.innerHTML += `<div class="bot-message error">Session expirée</div>`;
+            return;
+        }
+
+        chat.innerHTML += `<div class="user-message">${msg}</div>`;
+        input.value = "";
+
+        try {
+           const response = await fetch("http://localhost:8083/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        message: msg,
+        clientId: getClientId()
+    })
+});
+
+const text = await response.text();
+console.log("RAW RESPONSE =", text);
+
+let data;
+try {
+    data = JSON.parse(text);
+} catch (e) {
+    console.error("Response non JSON :", text);
+
+    chat.innerHTML += `
+        <div class="bot-message error">
+            ❌ Réponse invalide du serveur
+        </div>
+    `;
+    return;
+}
+
+if (!response.ok) {
+    throw new Error("HTTP error " + response.status);
+}
+
+
+try {
+    const data = JSON.parse(text);
+    chat.innerHTML += `<div class="bot-message">${data.response}</div>`;
+} catch (e) {
+    console.error("Invalid JSON:", text);
+    chat.innerHTML += `<div class="bot-message">${text}</div>`;
+}       
+
+        } catch (error) {
+            chat.innerHTML += `<div class="bot-message error">❌ Erreur IA</div>`;
+        }
+
+        chat.scrollTop = chat.scrollHeight;
+    };
+});
+  
+
+        </script>
+        <!-- Bouton chatbot -->
+       <div id="chatbot-sidebar">
+    <div class="chat-header">
+        🤖 Assistant
+        <span onclick="toggleChatbot()">✖</span>
+    </div>
+
+    <div id="chat-messages"></div>
+
+    <div class="chat-input">
+        <input type="text" id="chat-input" placeholder="Écris ton message...">
+        <button onclick="sendMessage()">➤</button>
+    </div>
+</div>
+
+<div id="chatbot-toggle" onclick="toggleChatbot()">🤖</div>
+
+</body>
+
+</html>

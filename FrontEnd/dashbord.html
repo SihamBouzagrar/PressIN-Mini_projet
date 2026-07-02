@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PressIN</title>
+    <link rel="icon" href="data:,">
+    <style>
+        :root {
+            --primary: #7b2fa8;
+            --primary-light: #9049bd;
+            --accent: #c9a961;
+            --accent-light: #e0c687;
+            --border: #e8eaf0;
+            --bg: #f4f5f7;
+            --text-dark: #2d1b4e;
+        }
+
+        /* === SIDEBAR === */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #7b2fa8;
+            color: white;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .sidebar-logo {
+            padding: 1.25rem 1rem;
+            font-size: 15px;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, .1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 0;
+        }
+
+        .logo-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: white;
+            padding: 4px;
+            object-fit: contain;
+        }
+
+        .sidebar-badge {
+            background: rgba(255, 255, 255, .15);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            letter-spacing: .05em;
+        }
+
+        .nav-section {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: rgba(255, 255, 255, .4);
+            padding: .875rem 1rem .3rem;
+            margin: 0;
+            opacity: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, .7);
+            text-decoration: none;
+            padding: .6rem 1rem;
+            font-size: 13px;
+            border-left: 2px solid transparent;
+            transition: all .2s;
+            margin-bottom: 0;
+            border-radius: 0;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, .08);
+            color: white;
+            border-left-color: rgba(255, 255, 255, .3);
+        }
+
+        .nav-item.active {
+            background: rgba(201, 169, 97, .2);
+            color: #e0c687;
+            border-left-color: #c9a961;
+        }
+
+        .nav-icon {
+            font-size: 14px;
+            width: 18px;
+            text-align: center;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, .1);
+            padding: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: .75rem;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: white;
+        }
+
+        .user-role {
+            font-size: 10px;
+            color: rgba(255, 255, 255, .4);
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: .55rem;
+            font-size: 12px;
+            border: 1px solid rgba(255, 255, 255, .15);
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            color: rgba(255, 255, 255, .65);
+            transition: all .2s;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+            border-color: #c0392b;
+            color: white;
+        }
+
+        /* === MAIN === */
+        .main {
+            margin-left: 260px;
+            min-height: 100vh;
+            background: var(--bg);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        /* === PAGE HEADER === */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .page-header h1 {
+            font-size: 19px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .page-header p {
+            font-size: 12px;
+            color: #888;
+            margin-top: 3px;
+        }
+
+        .date-pill {
+            font-size: 11px;
+            color: var(--primary);
+            background: #f3e8fb;
+            padding: 4px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        /* === STATS === */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 0.5px solid var(--border);
+            border-radius: 14px;
+            padding: .875rem 1rem;
+            transition: transform .2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .stat-icon {
+            font-size: 16px;
+        }
+
+        .stat-trend {
+            font-size: 10px;
+            color: #27ae60;
+            background: #eafaf1;
+            padding: 1px 6px;
+            border-radius: 20px;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #999;
+            margin-top: 3px;
+        }
+
+        /* === SECTION === */
+        .section {
+            display: flex;
+            flex-direction: column;
+            gap: .75rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header h2 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .btn-secondary {
+            font-size: 12px;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* === ORDER CARDS === */
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .order-card {
+            background: white;
+            border: 0.5px solid var(--border);
+            border-radius: 14px;
+            padding: .875rem 1rem;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 1rem;
+            border-left: 3px solid var(--primary);
+            transition: all .2s;
+        }
+
+        .order-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .06);
+        }
+
+        .order-num {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .order-meta {
+            font-size: 11px;
+            color: #999;
+            margin-top: 3px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .order-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .order-amount {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* === BADGES === */
+        .badge {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .badge-recue {
+            background: #f0f0f0;
+            color: #555;
+        }
+
+        .badge-lavage {
+            background: #ebf5fb;
+            color: #1a5276;
+        }
+
+        .badge-repassage {
+            background: #fef9e7;
+            color: #7d6608;
+        }
+
+        .badge-livraison {
+            background: #eaf4fb;
+            color: #154360;
+        }
+
+        .badge-prete {
+            background: #eafaf1;
+            color: #1e8449;
+        }
+
+        .badge-livree {
+            background: #e8f8f5;
+            color: #0e6655;
+        }
+
+        .badge-annulee {
+            background: #fdedec;
+            color: #922b21;
+        }
+
+        .edit-btn {
+            font-size: 11px;
+            padding: 4px 10px;
+            border: 0.5px solid #ddd;
+            border-radius: 8px;
+            background: transparent;
+            cursor: pointer;
+            color: #666;
+            transition: all .2s;
+        }
+
+        .edit-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* === LOADING / EMPTY === */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto .75rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #empty-state {
+            text-align: center;
+            padding: 2.5rem;
+            background: white;
+            border-radius: 14px;
+            border: 0.5px solid var(--border);
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        /* === MODAL === */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 380px;
+        }
+
+        .modal h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .modal select {
+            width: 100%;
+            padding: .6rem .875rem;
+            border-radius: 8px;
+            border: 0.5px solid #ddd;
+            font-size: 13px;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .modal-btns {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .btn-cancel {
+            padding: .5rem 1rem;
+            border: 0.5px solid #ddd;
+            border-radius: 8px;
+            background: transparent;
+            font-size: 12px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .btn-save {
+            padding: .5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-save:hover {
+            background: var(--primary-light);
+        }
+
+        /* === FOOTER === */
+        footer {
+            margin-left: 260px;
+            padding: .75rem;
+            text-align: center;
+            font-size: 11px;
+            color: #bbb;
+            background: white;
+            border-top: 0.5px solid #eee;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main,
+            footer {
+                margin-left: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img src="images/logo.png" alt="PressIN Logo" class="logo-img">
+            <span>PressIN</span>
+            <span class="sidebar-badge">ADMIN</span>
+        </div>
+        <div class="nav-section">Principal</div>
+        <a class="nav-item active" href="dashbord.html"><span class="nav-icon">📊</span> Dashbord </a>
+        <a class="nav-item" href="commande.html"><span class="nav-icon">📦</span> Commandes</a>
+       <a class="nav-item" href="utilisateurs.html"><span class="nav-icon">👥</span> Utilisateurs</a>
+        <div class="nav-section">Gestion</div>
+        <a class="nav-item" href="service.html"><span class="nav-icon">✨</span> Services</a>
+   
+        <a class="nav-item" href="profile.html"><span class="nav-icon">👤</span> Profil</a>
+        <div class="sidebar-bottom">
+            <div class="user-info">
+
+                <div>
+                    <div class="user-name" id="user-name">Admin</div>
+                    <div class="user-role">Admin</div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">🚪 Déconnexion</button>
+        </div>
+    </aside>
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- Header -->
+        <div class="page-header">
+            <h1>
+                Bienvenue, <span id="dashboard-user-name">Admin</span> !
+                <span id="greeting">👋</span>
+            </h1>
+           
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-content">
+                    <h3 id="stat-total">0</h3>
+                    <p>Commandes Totales</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-content">
+                    <h3 id="stat-en-cours">0</h3>
+                    <p>En Cours</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-content">
+                    <h3 id="stat-pret">0</h3>
+                    <p>Prêtes</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📬</div>
+                <div class="stat-content">
+                    <h3 id="stat-livree">0</h3>
+                    <p>Livrées</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-content">
+                    <h3 id="stat-montant">0 MAD</h3>
+                    <p>Chiffre d'affaires</p>
+                </div>
+            </div>
+        </div>
+        <!-- Commandes récentes -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Commandes Récentes</h2>
+                <a href="commande.html" class="btn btn-secondary">Voir tout →</a>
+            </div>
+
+            <div id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Chargement...</p>
+            </div>
+
+            <div id="orders-list" class="orders-list"></div>
+
+            <div id="empty-state" style="display: none;">
+                <div>📦</div>
+                <h3>Aucune commande</h3>
+                <p>Aucune commande enregistrée pour le moment.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL STATUT -->
+    <div class="modal-overlay" id="modal-statut" style="display:none;">
+        <div class="modal">
+            <h3>✏️ Modifier le statut</h3>
+            <select id="select-statut">
+                <option value="RECUE">🆕 Reçue</option>
+                <option value="EN_LAVAGE">🫧 En lavage</option>
+                <option value="EN_REPASSAGE">👔 En repassage</option>
+                <option value="EN_LIVRAISON">🚚 En livraison</option>
+                <option value="PRETE">✅ Prête</option>
+                <option value="LIVREE">📬 Livrée</option>
+                <option value="ANNULEE">❌ Annulée</option>
+            </select>
+            <div class="modal-btns">
+                <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+                <button class="btn-save" onclick="saveStatut()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8083/rest';
+        const role = sessionStorage.getItem("pressin_role");
+        const name = sessionStorage.getItem("pressin_name") || "Admin";
+        const userId = sessionStorage.getItem("pressin_user_id");
+
+        // 🔐 PROTECTION — doit être ROLE_ADMIN
+        if (!role || role !== "ROLE_ADMIN") {
+            window.location.href = "login.html";
+        }
+
+        // 🚀 INIT
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUserDisplay();
+            setGreeting();
+            setTimeout(() => loadDashboard(), 50);
+        });
+
+        // 👤 AFFICHAGE USER
+        function updateUserDisplay() {
+            const avatarEl = document.getElementById('user-avatar');
+            const nameEl = document.getElementById('user-name');
+            const dashNameEl = document.getElementById('dashboard-user-name');
+            if (avatarEl) avatarEl.textContent = name.charAt(0).toUpperCase();
+            if (nameEl) nameEl.textContent = name;
+            if (dashNameEl) dashNameEl.textContent = name;
+        }
+
+        // 🌤️ GREETING
+        function setGreeting() {
+            const hour = new Date().getHours();
+            const el = document.getElementById('greeting');
+            if (!el) return;
+            if (hour < 12) el.textContent = '🌅 Bonjour';
+            else if (hour < 18) el.textContent = '☀️ Bon après-midi';
+            else el.textContent = '🌙 Bonsoir';
+        }
+
+        // 📊 LOAD DASHBOARD
+        async function loadDashboard() {
+            showLoading(true);
+            try {
+                const res = await fetch(`${API_BASE_URL}/commandes/all`);
+                if (!res.ok) throw new Error("Erreur API commandes");
+                const commandes = await res.json();
+                updateStatistics(commandes);
+                displayRecentOrders(commandes.slice(0, 5));
+            } catch (err) {
+                console.error("Dashboard error:", err);
+                showEmptyState();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // 📊 STATISTIQUES
+        function updateStatistics(commandes) {
+            const total = commandes.length;
+            const enCours = commandes.filter(c =>
+                ['EN_LAVAGE', 'EN_REPASSAGE', 'EN_LIVRAISON'].includes(c.statut)
+            ).length;
+            const prete = commandes.filter(c => c.statut === 'PRETE').length;
+            const livree = commandes.filter(c => c.statut === 'LIVREE').length;
+            const montant = commandes.reduce(
+                (sum, c) => sum + (c.montantFinal || c.montantTotal || 0), 0
+            );
+            const el = id => document.getElementById(id);
+            if (el('stat-total')) el('stat-total').textContent = total;
+            if (el('stat-en-cours')) el('stat-en-cours').textContent = enCours;
+            if (el('stat-pret')) el('stat-pret').textContent = prete;
+            if (el('stat-livree')) el('stat-livree').textContent = livree;
+            if (el('stat-montant')) el('stat-montant').textContent =
+                montant.toFixed(2) + ' MAD';
+        }
+
+        // 📦 AFFICHAGE COMMANDES
+        function displayRecentOrders(commandes) {
+            const el = document.getElementById('orders-list');
+            if (!el) return;
+            if (!commandes || commandes.length === 0) {
+                showEmptyState();
+                return;
+            }
+            el.innerHTML = commandes.map(createOrderCard).join('');
+        }
+
+        function createOrderCard(order) {
+            const labels = {
+                RECUE: '🆕 Reçue',
+                EN_LAVAGE: '🫧 En lavage',
+                EN_REPASSAGE: '👔 En repassage',
+                EN_LIVRAISON: '🚚 En livraison',
+                PRETE: '✅ Prête',
+                LIVREE: '📬 Livrée',
+                ANNULEE: '❌ Annulée'
+            };
+            const client = order.client
+                ? `${order.client.firstname || ''} ${order.client.lastname || ''}`
+                : 'Client inconnu';
+            const livreur = order.livreur
+                ? `${order.livreur.firstname || ''} ${order.livreur.lastname || ''}`
+                : 'Non assigné';
+
+            return `
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <strong>${order.numeroCommande || '#' + order.id}</strong>
+                        <div class="order-date">👤 ${client}</div>
+                        <div class="order-date">🚚 Livreur : ${livreur}</div>
+                        <div class="order-date">📅 Collecte : ${formatDate(order.dateCollecteSouhaitee)}</div>
+                        <div class="order-date">📅 Livraison : ${formatDate(order.dateLivraisonSouhaitee)}</div>
+                    </div>
+                    <span class="order-status status-${order.statut}">
+                        ${labels[order.statut] || order.statut}
+                    </span>
+                </div>
+                <div class="order-footer">
+                    <div class="order-total">
+                        💰 ${(order.montantFinal || order.montantTotal || 0).toFixed(2)} MAD
+                    </div>
+                    <button onclick="changerStatut(${order.id}, '${order.statut}')">
+                        ✏️ Modifier statut
+                    </button>
+                </div>
+            </div>`;
+        }
+
+        // ✏️ MODAL STATUT
+        let selectedCommandeId = null;
+
+        function changerStatut(id, statutActuel) {
+            selectedCommandeId = id;
+            document.getElementById("select-statut").value = statutActuel;
+            document.getElementById("modal-statut").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("modal-statut").style.display = "none";
+            selectedCommandeId = null;
+        }
+
+        async function saveStatut() {
+            const statut = document.getElementById("select-statut").value;
+            try {
+                const res = await fetch(
+                    `${API_BASE_URL}/commandes/statut/${selectedCommandeId}?statut=${statut}`,
+                    { method: "PUT" }
+                );
+                if (!res.ok) throw new Error("Erreur");
+                alert("✅ Statut mis à jour !");
+                closeModal();
+                loadDashboard();
+            } catch (err) {
+                console.error(err);
+                alert("❌ Erreur lors de la modification");
+            }
+        }
+
+        // 📅 FORMAT DATE
+        function formatDate(date) {
+            if (!date) return '-';
+            return new Date(date).toLocaleDateString('fr-FR', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
+        }
+
+        // ⏳ UI STATES
+        function showLoading(show) {
+            const loadEl = document.getElementById('loading');
+            const listEl = document.getElementById('orders-list');
+            if (loadEl) loadEl.style.display = show ? 'block' : 'none';
+            if (listEl) listEl.style.display = show ? 'none' : 'block';
+        }
+
+        function showEmptyState() {
+            const listEl = document.getElementById('orders-list');
+            const emptyEl = document.getElementById('empty-state');
+            if (listEl) listEl.style.display = 'none';
+            if (emptyEl) emptyEl.style.display = 'block';
+        }
+
+        // 🚪 LOGOUT
+        function logout() {
+            if (confirm("Confirmer la déconnexion ?")) {
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+    <footer>
+        <p>PressIN - L'avenir du pressing est numérique . </p>
+    </footer>
+</body>
+
+</html>
