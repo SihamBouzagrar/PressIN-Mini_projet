@@ -212,6 +212,9 @@ TP_Java/
 
 ---
 
-## 📄 License
+## 📄 License & Author
 
-Academic project — for educational purposes.
+Author: Siham Bouzagrar
+
+This project was developed as an end-of-year academic project (Projet de Fin d'Année).
+All rights reserved to the author. For educational purposes only.
